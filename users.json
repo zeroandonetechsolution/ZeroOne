@@ -1,0 +1,26 @@
+{
+  "users": [
+    {
+      "id": "admin-001",
+      "username": "zeroandone",
+      "email": "zeroandone@zeroone.site",
+      "passwordHash": "$2a$10$c2i/BmFIUorsOYgDUDp/puE9Yzen9CM17rEXD3McHBTBMasg7eAnK",
+      "fullName": "Primary Admin",
+      "role": "admin",
+      "billAmount": 0,
+      "createdAt": "2026-02-12T14:00:00.000Z",
+      "updatedAt": "2026-02-12T14:00:00.000Z"
+    },
+    {
+      "id": "daa8b265-2c67-4166-8626-240b6bdb253f",
+      "username": "JEGA01",
+      "passwordHash": "$2a$10$uuNZdBbaM89z2mCwGaG72e8QadgCnhIl8Vulj7V10TLH2QiY6jMK6",
+      "fullName": "jegatheeshwar",
+      "email": "jegatheeshwar905@gmail.com",
+      "role": "user",
+      "billAmount": 10000,
+      "createdAt": "2026-02-15T05:23:51.795Z",
+      "updatedAt": "2026-02-15T05:42:19.706Z"
+    }
+  ]
+}

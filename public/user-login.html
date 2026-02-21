@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Login | Zero & One</title>
+    <link rel="icon" href="assets/images/zero-and-one-logo.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="theme.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .submit-btn { width: 100%; background: var(--primary); color: #fff; margin-top: 20px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+        .auth-header { text-align: center; margin-bottom: 30px; }
+        .error-msg { color: #ef4444; font-size: 0.85rem; margin-top: 15px; display: none; text-align: center; }
+    </style>
+</head>
+<body class="auth-page">
+    <div class="bg-glow"></div>
+    <div class="auth-container">
+        <div class="auth-card glass-panel">
+            <div class="auth-header">
+                <img src="assets/images/zero-and-one-logo.jpeg" alt="Logo" style="width: 70px; border-radius: 50%; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 2rem; margin-bottom: 8px;">Customer <span class="gradient-text" style="background: linear-gradient(90deg, #6366f1, #a855f7); -webkit-background-clip: text; background-clip: text;">Portal</span></h1>
+                <p style="color: #a1a1aa; font-weight: 400;">Access your billing and project status</p>
+            </div>
+
+            <form id="auth-form">
+                <div class="input-group">
+                    <label>Username / Ref ID</label>
+                    <input type="text" id="email" class="auth-input" placeholder="Enter Ref ID" required autocomplete="username">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="password" class="auth-input" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+                
+                <div id="auth-error" class="error-msg"></div>
+
+                <button type="submit" id="submit-btn" class="btn-premium submit-btn">Authenticate</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="core.js"></script>
+    <script src="auth-handler.js"></script>
+</body>
+</html>

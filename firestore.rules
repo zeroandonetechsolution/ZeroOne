@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        request.auth.token.email == 'zeroandone@zeroone.site'
+      );
+    }
+
+    // User Profiles
+    match /users/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow create: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow update: if isSignedIn() && (
+        isAdmin() || 
+        (request.auth.uid == userId && 
+         request.resource.data.billAmount == resource.data.billAmount &&
+         request.resource.data.role == resource.data.role &&
+         request.resource.data.uid == resource.data.uid)
+      );
+    }
+    
+    // Transactions
+    match /transactions/{txnId} {
+      allow read: if isSignedIn() && (
+        resource.data.uid == request.auth.uid || isAdmin()
+      );
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if false; // Immutability for financial records
+    }
+    
+    // Admin access to all users (for fetching user list)
+    match /users {
+      allow read: if isAdmin();
+    }
+
+    // Global Settings
+    match /settings/payment {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+  }
+}

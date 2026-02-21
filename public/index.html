@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero & One Tech Solutions Pvt. Ltd.</title>
+    <link rel="icon" href="assets/images/zero-and-one-logo.jpeg" type="image/jpeg">
+    <meta name="description" content="Expert web development, design, and digital solutions for modern businesses.">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-container">
+            <a href="#home" class="logo">
+                <!-- Replace with your logo image -->
+                <img src="assets/images/zero-and-one-logo.jpeg" alt="Zero & One Tech Solutions Logo" class="logo-img">
+                Zero & One Tech Solutions Pvt Ltd<span class="highlight">.</span>
+            </a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="#home" class="nav-link">Home</a></li>
+                    <li><a href="#services" class="nav-link">Services</a></li>
+                    <li><a href="#portfolio" class="nav-link">Works</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                    
+                    <li class="nav-item dropdown" id="login-nav-item">
+                        <a href="javascript:void(0)" class="nav-link dropdown-toggle" id="login-btn">Login <span class="arrow">▾</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="user-login.html" class="dropdown-link">User Login</a></li>
+                            <li><a href="admin-login.html" class="dropdown-link">Admin Login</a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- Dynamic Dashboard Links (hidden by default) -->
+                    <li id="admin-nav-item" style="display: none;"><a href="admin-dashboard.html" class="nav-link">Admin Dashboard</a></li>
+                    <li id="user-dashboard-nav-item" style="display: none;"><a href="payment.html" class="nav-link">Dashboard</a></li>
+                    
+                    <li id="user-nav-item" style="display: none;">
+                        <span id="user-name-display" class="nav-link" style="color: var(--primary); font-weight: 600;"></span>
+                        <button id="logout-btn" class="nav-link" style="background:none; border:none; cursor:pointer;" onclick="Core.logout()">Logout</button>
+                    </li>
+                </ul>
+                <div class="menu-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">Crafting Digital <span class="gradient-text">Masterpieces</span>.</h1>
+                    <p class="hero-subtitle">We build high-performance websites and applications that elevate your brand and drive growth.</p>
+                    <div class="hero-buttons">
+                        <a href="#contact" class="btn btn-primary">Start Your Project</a>
+                        <a href="#portfolio" class="btn btn-secondary">View Our Work</a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="circle-gradient"></div>
+                    <img src="assets/images/zero-and-one-logo.jpeg" alt="Zero & One Tech Solutions Logo" class="hero-logo">
+                </img>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="section services">
+            <div class="container">
+                <h2 class="section-title">Our Expertise</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="icon">💻</div>
+                        <h3>Web Development</h3>
+                        <p>Custom, scalable, and secure websites built with the latest technologies.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="icon">🎨</div>
+                        <h3>UI/UX Design</h3>
+                        <p>Intuitive and visually stunning designs that provide exceptional user experiences.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="icon">🚀</div>
+                        <h3>Tech Solutions & Consulting</h3>
+                        <p>We provide end-to-end technology solutions and expert consulting services to help businesses leverage the latest advancements in digital transformation.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="icon">📱</div>
+                        <h3>Mobile Apps</h3>
+                        <p>Responsive and native applications for iOS and Android platforms.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="portfolio" class="section portfolio">
+            <div class="container">
+                <h2 class="section-title">Selected Work</h2>
+                <div class="portfolio-grid">
+                    <!-- Project 1 -->
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="assets/images/portfolio/E-commerce.png" alt="E-Commerce Platform">
+                        </div>
+                        <div class="project-info">
+                            <h3>E-Commerce Platform</h3>
+                            <p>Full-stack development for a fashion retailer.</p>
+                        </div>
+                    </div>
+                    <!-- Project 2 -->
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="assets/images/portfolio/rebranding.jpg" alt="Corporate Rebranding">
+                        </div>
+                        <div class="project-info">
+                            <h3>Corporate Rebranding</h3>
+                            <p>Website redesign for a financial firm.</p>
+                        </div>
+                    </div>
+                    <!-- Project 3 -->
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="assets/images/portfolio/tech solutions.png" alt="Tech Solutions">
+                        </div>
+                        <div class="project-info">
+                            <h3>Tech Solutions</h3>
+                            <p>Tech Solutions For Startups And Small Businesses</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section about">
+            <div class="container about-container">
+                <div class="about-text">
+                    <h2 class="section-title">Who We Are</h2>
+                    <p>Zero & One Tech Solutions is a team of passionate developers and designers dedicated to pushing the boundaries of the web. We believe in quality, transparency, and results.</p>
+                    <ul class="stats">
+                        <li><strong>56+</strong> Projects Delivered</li>
+                        <li><strong>99%</strong> Client Satisfaction</li>
+                        <li><strong>24/7</strong> Support</li>
+                    </ul>
+                </div>
+                <div class="about-image">
+                    <!-- Team image placeholder -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section contact">
+            <div class="container contact-container">
+                <div class="contact-info">
+                    <h2 class="section-title">Let's Talk</h2>
+                    <p>Ready to start your next project? Get in touch with us today.</p>
+                    <p>📧 zeroandonetechsolution@gmail.com</p>
+                    <p>📞 +91 9514518197</p>
+                </div>
+                <form class="contact-form" action="mailto:zeroandonetechsolution@gmail.com" method="post" enctype="text/plain">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" placeholder="Project Details" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <p>&copy; 2026 Zero & One Tech Solutions Pvt. Ltd. All rights reserved.</p>
+            <div class="social-links">
+                <a href="payment.html">Pay Bill Online</a>
+                <a href="https://x.com/ZeroOnePvtLtd">Twitter</a>
+                <a href="https://www.linkedin.com/in/zero-one-3a55913ab/">LinkedIn</a>
+                <a href="https://www.instagram.com/zero_one_tech_solutions?igsh=YnF0dzUwenR6bXV2">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="core.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

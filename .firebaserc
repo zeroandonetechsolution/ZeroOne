@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "zeroandonetech",
+    "live": "zeroandonetech",
+    "website": "zeroandonetech"
+  },
+  "targets": {},
+  "etags": {}
+}

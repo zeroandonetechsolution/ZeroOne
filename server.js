@@ -16,6 +16,7 @@ const SESSIONS_FILE = path.join(__dirname, "sessions.json");
 // Middleware
 const allowedOrigins = [
   process.env.FRONTEND_URL,
+  'https://zeroone-o0u0.onrender.com',
   "https://zeroandonetech.web.app",
   "https://zeroandonetech.firebaseapp.com",
   "http://localhost:3000",

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Lost in the Digital Void | ZeroOne</title>
+    <title id="page-title">404 - Lost in the Digital Void | ZeroOne</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Space+Mono&display=swap" rel="stylesheet">
@@ -170,6 +170,76 @@
             letter-spacing: 4px;
         }
 
+        /* ── Status Badge ──────────────────────────────── */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            border: 1px solid;
+            transition: all 0.5s ease;
+        }
+
+        .status-badge.not-found {
+            background: rgba(0, 242, 255, 0.08);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .status-badge.offline {
+            background: rgba(255, 60, 60, 0.1);
+            border-color: #ff3c3c;
+            color: #ff3c3c;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%  { opacity: 0.4; transform: scale(0.7); }
+        }
+
+        /* ── Network status banner ──────────────────────── */
+        .network-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-family: 'Space Mono', monospace;
+            letter-spacing: 1px;
+            transform: translateY(-100%);
+            transition: transform 0.4s ease;
+            z-index: 999;
+        }
+
+        .network-bar.show {
+            transform: translateY(0);
+        }
+
+        .network-bar.offline-bar {
+            background: linear-gradient(90deg, #ff3c3c, #b00020);
+            color: white;
+        }
+
+        .network-bar.online-bar {
+            background: linear-gradient(90deg, #00c853, #007b33);
+            color: white;
+        }
+
         @media (max-width: 480px) {
             .error-code { font-size: 5rem; }
             h1 { font-size: 1.5rem; }
@@ -180,11 +250,18 @@
 <body>
     <canvas id="canvas"></canvas>
 
+    <!-- Network Status Top Bar -->
+    <div class="network-bar" id="network-bar"></div>
+
     <div class="container">
-        <div class="error-code">404</div>
-        <h1>System Discontinuity</h1>
-        <p>The sequence you requested has diverged from our current matrix. You have reached the edge of the ZeroOne network.</p>
-        <a href="/" class="btn-home">Recalibrate Route</a>
+        <div class="status-badge not-found" id="status-badge">
+            <span class="badge-dot"></span>
+            <span id="badge-text">404 NOT FOUND</span>
+        </div>
+        <div class="error-code" id="error-code">404</div>
+        <h1 id="error-title">System Discontinuity</h1>
+        <p id="error-msg">The sequence you requested has diverged from our current matrix. You have reached the edge of the ZeroOne network.</p>
+        <a href="/" class="btn-home" id="cta-btn">Recalibrate Route</a>
         <div class="binary-tag">01011010 01100101 01110010 01101111 01001111 01101110 01100101</div>
     </div>
 
@@ -267,13 +344,70 @@
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            
-            // Subtle parallax effect for container
             const container = document.querySelector('.container');
             const dx = (window.innerWidth / 2 - mouseX) / 25;
             const dy = (window.innerHeight / 2 - mouseY) / 25;
             container.style.transform = `translate(${dx}px, ${dy}px) rotateX(${dy/2}deg) rotateY(${-dx/2}deg)`;
         });
+
+        // ── Online / Offline Detection ────────────────────────────────────────
+        const badge      = document.getElementById('status-badge');
+        const badgeText  = document.getElementById('badge-text');
+        const errorCode  = document.getElementById('error-code');
+        const errorTitle = document.getElementById('error-title');
+        const errorMsg   = document.getElementById('error-msg');
+        const ctaBtn     = document.getElementById('cta-btn');
+        const networkBar = document.getElementById('network-bar');
+        let barTimer;
+
+        function showNetworkBar(isOnline) {
+            clearTimeout(barTimer);
+            networkBar.textContent = isOnline
+                ? '▸ CONNECTION RESTORED — Reloading…'
+                : '▸ NO NETWORK SIGNAL DETECTED';
+            networkBar.className = `network-bar show ${isOnline ? 'online-bar' : 'offline-bar'}`;
+            if (isOnline) {
+                barTimer = setTimeout(() => window.location.reload(), 2000);
+            }
+        }
+
+        function setOfflineMode() {
+            document.getElementById('page-title').textContent = 'Offline - Network Lost | ZeroOne';
+            badge.classList.replace('not-found', 'offline');
+            badgeText.textContent = 'NO SIGNAL';
+            errorCode.textContent = '!';
+            errorTitle.textContent = 'Network Disconnected';
+            errorMsg.textContent = 'Your connection has been lost. The ZeroOne network cannot be reached. Check your Wi-Fi or mobile data and try again.';
+            ctaBtn.textContent = 'Try Reconnecting';
+            ctaBtn.href = '#';
+            ctaBtn.onclick = (e) => { e.preventDefault(); window.location.reload(); };
+            showNetworkBar(false);
+        }
+
+        function set404Mode() {
+            document.getElementById('page-title').textContent = '404 - Lost in the Digital Void | ZeroOne';
+            badge.classList.replace('offline', 'not-found');
+            badgeText.textContent = '404 NOT FOUND';
+            errorCode.textContent = '404';
+            errorTitle.textContent = 'System Discontinuity';
+            errorMsg.textContent = 'The sequence you requested has diverged from our current matrix. You have reached the edge of the ZeroOne network.';
+            ctaBtn.textContent = 'Recalibrate Route';
+            ctaBtn.href = '/';
+            ctaBtn.onclick = null;
+        }
+
+        // Initial check
+        if (!navigator.onLine) setOfflineMode();
+
+        window.addEventListener('offline', () => setOfflineMode());
+        window.addEventListener('online',  () => showNetworkBar(true));
+
+        // ── Service Worker Registration ────────────────────────────────────────
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('[SW] Registered:', reg.scope))
+                .catch(err => console.warn('[SW] Registration failed:', err));
+        }
     </script>
 </body>
 </html>

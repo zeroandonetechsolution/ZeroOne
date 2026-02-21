@@ -9,6 +9,9 @@ const { v4: uuidv4 } = require("uuid");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Required for secure cookies on Render/Heroku
+app.set('trust proxy', 1);
+
 // File paths
 const USERS_FILE = path.join(__dirname, "users.json");
 const SESSIONS_FILE = path.join(__dirname, "sessions.json");

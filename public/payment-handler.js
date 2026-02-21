@@ -10,9 +10,13 @@ const PaymentConfig = {
 
 const PaymentHandler = {
     currentBillAmount: 0,
+    cashfree: null,
 
     init: async function() {
         try {
+            // Initialize Cashfree SDK (v3)
+            this.cashfree = Cashfree({ mode: "sandbox" }); // Change to "production" for live
+            
             const userData = await this.getUserData();
             if (userData) {
                 this.updateBillUI(userData);
@@ -144,6 +148,47 @@ const PaymentHandler = {
         }).catch(err => {
             console.error('Failed to copy: ', err);
         });
+    },
+
+    handleCashfreePayment: async function() {
+        if (this.currentBillAmount <= 0) return alert("No pending bill amount.");
+        
+        const btn = document.getElementById('cashfree-pay-btn');
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = "Processing...";
+        }
+
+        try {
+            // 1. Create Order on Backend
+            const response = await fetch(`${API_BASE_URL}/api/payments/create`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ amount: this.currentBillAmount })
+            });
+
+            if (!response.ok) throw new Error("Could not create payment session");
+            
+            const data = await response.json();
+            
+            // 2. Open Cashfree Checkout
+            let checkoutOptions = {
+                paymentSessionId: data.payment_session_id,
+                redirectTarget: "_self", // Or "_modal"
+            };
+
+            this.cashfree.checkout(checkoutOptions);
+
+        } catch (error) {
+            console.error("Payment error:", error);
+            alert("Payment failed to initialize: " + error.message);
+        } finally {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = "Pay via Cashfree";
+            }
+        }
     },
 
     requestVerification: function() {

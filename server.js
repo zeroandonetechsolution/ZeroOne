@@ -5,8 +5,16 @@ const bcrypt = require("bcryptjs");
 const fs = require("fs").promises;
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
+const { Cashfree } = require('cashfree-pg');
 
 const app = express();
+
+// Initialize Cashfree
+Cashfree.XClientId = process.env.CASHFREE_APP_ID;
+Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
+Cashfree.XEnvironment = process.env.CASHFREE_ENV === 'PRODUCTION' 
+    ? Cashfree.Environment.PRODUCTION 
+    : Cashfree.Environment.SANDBOX;
 const PORT = process.env.PORT || 3000;
 
 // Required for secure cookies on Render/Heroku
@@ -313,6 +321,63 @@ app.delete("/api/users/:id", requireAdmin, async (req, res) => {
     console.error("Delete user error:", error);
     res.status(500).json({ error: "Failed to delete user" });
   }
+});
+
+// ============= PAYMENT ENDPOINTS =============
+
+// Create Cashfree Order
+app.post('/api/payments/create', requireAuth, async (req, res) => {
+    try {
+        const { amount, customerName, customerEmail, customerPhone } = req.body;
+        const { users } = await readUsers();
+        const user = findUserById(users, req.session.userId);
+
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        const orderId = `order_${uuidv4().substring(0, 8)}_${Date.now()}`;
+
+        const request = {
+            "order_amount": parseFloat(amount).toFixed(2),
+            "order_currency": "INR",
+            "order_id": orderId,
+            "customer_details": {
+                "customer_id": user.id,
+                "customer_name": customerName || user.fullName || "Customer",
+                "customer_email": customerEmail || user.email || "info@zeroone.site",
+                "customer_phone": customerPhone || "9999999999"
+            },
+            "order_meta": {
+                "return_url": `${process.env.FRONTEND_URL}/payment-status.html?order_id={order_id}`
+            }
+        };
+
+        const response = await Cashfree.PGCreateOrder("2023-08-01", request);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Cashfree Error:', error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'Payment initialization failed' });
+    }
+});
+
+// Verify Payment
+app.get('/api/payments/verify/:orderId', requireAuth, async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const response = await Cashfree.PGOrderFetchPayments("2023-08-01", orderId);
+        
+        const payments = response.data;
+        const successPayment = payments.find(p => p.payment_status === 'SUCCESS');
+
+        if (successPayment) {
+            // Logic to clear user bill could go here
+            return res.json({ status: 'SUCCESS', payment: successPayment });
+        }
+
+        res.json({ status: 'PENDING' });
+    } catch (error) {
+        console.error('Verification Error:', error.message);
+        res.status(500).json({ error: 'Verification failed' });
+    }
 });
 
 // Start server

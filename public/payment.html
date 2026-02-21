@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Cashfree SDK -->
+    <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
     <style>
         .dashboard-container { max-width: 1000px; margin: 40px auto; padding: 20px; }
         .bill-card { padding: 40px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
@@ -42,14 +44,19 @@
                 <p id="bill-date" style="color: #71717a; font-size: 0.9rem;">Last Updated: --</p>
             </div>
             <div>
-                <button class="btn-premium" style="background: var(--primary); padding: 15px 40px;">Pay Now</button>
+                <button class="btn-premium" style="background: var(--primary); padding: 15px 40px;" onclick="PaymentHandler.handleCashfreePayment()">Quick Pay</button>
             </div>
         </div>
 
         <h3 style="margin-bottom: 20px;">Payment Methods</h3>
         <div class="payment-options">
+            <div class="option-card glass-panel" id="cashfree-pay-btn" onclick="PaymentHandler.handleCashfreePayment()">
+                <h4 style="margin-bottom: 10px;">Cashfree PG</h4>
+                <p style="color: #71717a; font-size: 0.9rem; margin-bottom: 20px;">Card, NetBanking, Wallet & UPI</p>
+                <button class="btn-premium" style="width: 100%; background: var(--primary);">Pay Now</button>
+            </div>
             <div class="option-card glass-panel" onclick="PaymentHandler.openPaymentModal('upi')">
-                <h4 style="margin-bottom: 10px;">UPI Transfer</h4>
+                <h4 style="margin-bottom: 10px;">Direct UPI</h4>
                 <p style="color: #71717a; font-size: 0.9rem; margin-bottom: 20px;">Instant verification via any UPI app</p>
                 <button class="btn-premium" style="width: 100%; background: rgba(255,255,255,0.05);">Select UPI</button>
             </div>

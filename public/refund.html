@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -31,5 +31,13 @@
         <h2>4. No-Refund Cases</h2>
         <p>Refunds are not applicable for services already rendered or for chit fund distributions once finalized.</p>
     </main>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('[SW] Registered:', reg.scope))
+          .catch(err => console.warn('[SW] Failed:', err));
+      }
+    </script>
 </body>
 </html>

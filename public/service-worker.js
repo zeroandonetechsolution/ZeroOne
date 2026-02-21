@@ -1,10 +1,17 @@
-const CACHE_NAME = 'zeroane-v1';
+const CACHE_NAME = 'zeroane-v2';
 const OFFLINE_PAGE = '/404.html';
 
-// Assets to pre-cache on install
+// Pre-cache ALL pages so they work offline after first visit
 const PRECACHE_ASSETS = [
   '/404.html',
   '/index.html',
+  '/admin-dashboard.html',
+  '/admin-login.html',
+  '/payment.html',
+  '/privacy.html',
+  '/refund.html',
+  '/terms.html',
+  '/user-login.html',
 ];
 
 // ── Install: pre-cache critical assets ──────────────────────────────────────

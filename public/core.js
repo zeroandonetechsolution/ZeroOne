@@ -74,7 +74,7 @@ const Core = {
         const currentPage = path.split('/').pop() || 'index.html';
         const role = userData ? userData.role : 'user';
         
-        const isMasterAdmin = (userData && userData.username === 'zeroandone');
+        const isMasterAdmin = (userData && userData.username === 'jega');
 
         // Prevent logged-in users from hitting login pages
         if (currentPage === 'user-login.html' || currentPage === 'admin-login.html') {
@@ -101,7 +101,7 @@ const Core = {
         const userDisplay = document.getElementById('user-name-display');
 
         const role = userData?.role || 'user';
-        const isMasterAdmin = (userData && userData.username === 'zeroandone');
+        const isMasterAdmin = (userData && userData.username === 'jega');
 
         if (loginNavItem) loginNavItem.style.display = 'none';
         if (userNavItem) userNavItem.style.display = 'flex';

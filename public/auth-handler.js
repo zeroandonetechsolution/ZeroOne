@@ -45,7 +45,7 @@ const AuthHandler = {
 
             // Verify role if on admin page
             if (this.authPageType === 'admin') {
-                const isMasterAdmin = (user.username === 'zeroandone');
+                const isMasterAdmin = (user.username === 'jega');
                 
                 if (user.role !== 'admin' && !isMasterAdmin) {
                     await this.logout();
@@ -54,7 +54,7 @@ const AuthHandler = {
             }
 
             // Redirect based on role
-            if (user.role === 'admin' || user.username === 'zeroandone') {
+            if (user.role === 'admin' || user.username === 'jega') {
                 window.location.href = 'admin-dashboard.html';
             } else {
                 window.location.href = 'payment.html';

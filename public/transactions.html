@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History | Zero &amp; One Tech Solutions Pvt. Ltd.</title>
+    <meta name="description" content="Explore our complete transaction history, successfully delivered projects, and the expert team behind Zero &amp; One Tech Solutions.">
+    <link rel="icon" href="assets/images/zero-and-one-logo.jpeg" type="image/jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ===== PAGE-SPECIFIC VARIABLES ===== */
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --accent: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --bg: #0a0a0a;
+            --surface: #111111;
+            --card: #181818;
+            --border: rgba(255,255,255,0.07);
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+            --glow-primary: rgba(99,102,241,0.35);
+            --glow-secondary: rgba(168,85,247,0.35);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== NAVIGATION / BACK LINK ===== */
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--primary);
+            transform: translateX(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* ===== PAGE HERO ===== */
+        .page-hero {
+            min-height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 160px 2rem 40px;
+            overflow: hidden;
+        }
+
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--glow-secondary), var(--glow-primary), transparent 70%);
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            filter: blur(60px);
+            animation: heroGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroGlow {
+            from { opacity: 0.5; transform: translateX(-50%) scale(1); }
+            to   { opacity: 0.8; transform: translateX(-50%) scale(1.15); }
+        }
+
+        .page-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99,102,241,0.15);
+            border: 1px solid rgba(99,102,241,0.4);
+            border-radius: 50px;
+            padding: 6px 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+            position: relative;
+            z-index: 1;
+            animation: fadeDown 0.6s ease;
+        }
+
+        .page-hero-badge .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: blink 1.4s ease-in-out infinite;
+        }
+
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+        .page-hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            animation: fadeDown 0.7s ease 0.1s both;
+        }
+
+        .page-hero p {
+            color: var(--muted);
+            font-size: 1.1rem;
+            max-width: 560px;
+            margin: 1rem auto 0;
+            position: relative;
+            z-index: 1;
+            animation: fadeDown 0.7s ease 0.2s both;
+        }
+
+        .gradient-text {
+            background: linear-gradient(120deg, var(--primary), var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== STATS BANNER ===== */
+        .stats-banner {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 4rem auto 5rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+            animation: fadeUp 0.7s ease 0.3s both;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .stat-card:nth-child(1)::before { background: linear-gradient(135deg, rgba(99,102,241,0.08), transparent); }
+        .stat-card:nth-child(2)::before { background: linear-gradient(135deg, rgba(16,185,129,0.08), transparent); }
+        .stat-card:nth-child(3)::before { background: linear-gradient(135deg, rgba(168,85,247,0.08), transparent); }
+        .stat-card:nth-child(4)::before { background: linear-gradient(135deg, rgba(236,72,153,0.08), transparent); }
+
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .stat-card:hover::before { opacity: 1; }
+
+        .stat-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card:nth-child(2) .stat-value { background: linear-gradient(90deg, var(--success), #34d399); -webkit-background-clip: text; background-clip: text; }
+        .stat-card:nth-child(3) .stat-value { background: linear-gradient(90deg, var(--secondary), #c084fc); -webkit-background-clip: text; background-clip: text; }
+        .stat-card:nth-child(4) .stat-value { background: linear-gradient(90deg, var(--accent), #f97316); -webkit-background-clip: text; background-clip: text; }
+
+        .stat-label { color: var(--muted); font-size: 0.85rem; font-weight: 500; margin-top: 0.25rem; }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 5rem;
+        }
+
+        /* ===== SECTION HEADERS ===== */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border), transparent);
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .section-badge .ico { font-size: 1.5rem; }
+
+        /* ===== FILTERS & SEARCH ===== */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.6rem 1.2rem;
+            flex: 1;
+            max-width: 360px;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus-within { border-color: var(--primary); }
+        .search-box .search-icon { color: var(--muted); font-size: 1rem; }
+        .search-box input {
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            width: 100%;
+        }
+        .search-box input::placeholder { color: var(--muted); }
+
+        .filter-btns {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.45rem 1rem;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--muted);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        /* ===== TABLE ===== */
+        .table-wrapper {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            animation: fadeUp 0.7s ease 0.4s both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.08));
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead th {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            transition: background 0.2s;
+            animation: rowIn 0.5s ease both;
+        }
+
+        @keyframes rowIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: rgba(99,102,241,0.05); }
+
+        tbody td {
+            padding: 0.9rem 1.2rem;
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        .tx-id {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .client-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .client-loc {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .project-type {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .type-web     { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
+        .type-design  { background: rgba(236,72,153,0.15); color: #f472b6; border: 1px solid rgba(236,72,153,0.3); }
+        .type-mobile  { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+        .type-consult { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+        .type-ecom    { background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); }
+
+        .amount {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--success);
+        }
+
+        .completor-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .tag-jega { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
+        .tag-jai  { background: rgba(236,72,153,0.15); color: #f472b6; border: 1px solid rgba(236,72,153,0.3); }
+
+        .completor-tag .avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+        .tag-jega .avatar { background: var(--primary); color: white; }
+        .tag-jai .avatar  { background: var(--accent); color: white; }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(16,185,129,0.15);
+            color: var(--success);
+            border: 1px solid rgba(16,185,129,0.3);
+        }
+
+        .status-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        /* ===== TEAM SECTION ===== */
+        .team-section {
+            margin-top: 4rem;
+            animation: fadeUp 0.7s ease 0.5s both;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .team-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+        }
+
+        .team-card:nth-child(1)::before {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .team-card:nth-child(2)::before {
+            background: linear-gradient(90deg, var(--accent), #f97316);
+        }
+
+        .team-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+        }
+
+        .team-card:nth-child(1):hover { box-shadow: 0 25px 60px rgba(99,102,241,0.15); }
+        .team-card:nth-child(2):hover { box-shadow: 0 25px 60px rgba(236,72,153,0.15); }
+
+        .team-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .team-card:nth-child(1) .team-avatar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 0 30px rgba(99,102,241,0.4);
+        }
+
+        .team-card:nth-child(2) .team-avatar {
+            background: linear-gradient(135deg, var(--accent), #f97316);
+            box-shadow: 0 0 30px rgba(236,72,153,0.4);
+        }
+
+        .team-info { flex: 1; }
+
+        .team-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .team-role {
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 3px 12px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .team-card:nth-child(1) .team-role {
+            background: rgba(99,102,241,0.15);
+            color: #818cf8;
+            border: 1px solid rgba(99,102,241,0.3);
+        }
+
+        .team-card:nth-child(2) .team-role {
+            background: rgba(236,72,153,0.15);
+            color: #f472b6;
+            border: 1px solid rgba(236,72,153,0.3);
+        }
+
+        .team-bio {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 1.2rem;
+        }
+
+        .team-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            padding: 3px 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--muted);
+        }
+
+        .team-stat {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            text-align: right;
+        }
+
+        .team-stat-num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .team-card:nth-child(1) .team-stat-num { color: var(--primary); }
+        .team-card:nth-child(2) .team-stat-num { color: var(--accent); }
+
+        .team-stat-label { font-size: 0.75rem; color: var(--muted); }
+
+        /* ===== PAGINATION ===== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            min-width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--muted);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-btn:hover, .page-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .page-info {
+            color: var(--muted);
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 0.75rem;
+        }
+
+        /* ===== BACK LINK ===== */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.6rem 1.4rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: absolute;
+            top: 100px;
+            left: 2rem;
+            z-index: 10;
+        }
+
+        .back-link:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: translateX(-3px);
+        }
+
+        /* ===== NO RESULTS ===== */
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--muted);
+            display: none;
+        }
+
+        .no-results .emoji { font-size: 3rem; margin-bottom: 1rem; display: block; }
+
+        /* ===== SCROLL TOP ===== */
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(99,102,241,0.5);
+            z-index: 100;
+        }
+
+        .scroll-top.visible { opacity: 1; transform: translateY(0); }
+        .scroll-top:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(99,102,241,0.7); }
+
+        /* ===== FOOTER ===== */
+        .page-footer {
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 2rem;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .page-footer a { color: var(--primary); transition: color 0.2s; }
+        .page-footer a:hover { color: var(--secondary); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .stats-banner { grid-template-columns: repeat(2, 1fr); }
+            .team-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .back-link { top: 80px; left: 1rem; font-size: 0.8rem; }
+            .page-hero { padding: 100px 1.5rem 50px; }
+            .stats-banner { grid-template-columns: repeat(2, 1fr); padding: 0 1rem; gap: 1rem; margin-top: 2rem; }
+            .main-content { padding: 0 1rem 4rem; }
+            .controls { flex-direction: column; align-items: stretch; }
+            .search-box { max-width: 100%; }
+
+            table { font-size: 0.82rem; }
+            thead th { padding: 0.8rem 0.7rem; font-size: 0.7rem; }
+            tbody td { padding: 0.7rem 0.7rem; }
+
+            .team-card { flex-direction: column; padding: 2rem 1.5rem; }
+            .team-avatar { width: 70px; height: 70px; font-size: 1.5rem; }
+            .team-stat { position: static; text-align: left; margin-top: 0.5rem; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-banner { grid-template-columns: 1fr 1fr; }
+            .filter-btns { gap: 0.3rem; }
+            .filter-btn { font-size: 0.78rem; padding: 0.4rem 0.8rem; }
+
+            /* Hide less important columns on very small screens */
+            .col-date, .col-amount { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Back to Home -->
+<a href="index.html" class="back-link" id="back-link">← Back to Home</a>
+
+<!-- Page Hero -->
+<section class="page-hero">
+    <span class="page-hero-badge"><span class="dot"></span> Live Records</span>
+    <h1>Transaction <span class="gradient-text">History</span></h1>
+    <p>All completed projects, payment records &amp; client deliveries — powered by Zero &amp; One Tech Solutions.</p>
+</section>
+
+<!-- Stats Banner -->
+<div class="stats-banner">
+    <div class="stat-card">
+        <div class="stat-icon">📁</div>
+        <div class="stat-value" id="stat-total">15</div>
+        <div class="stat-label">Total Projects</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value">15</div>
+        <div class="stat-label">Completed</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value" id="stat-revenue">₹46.5K</div>
+        <div class="stat-label">Total Revenue</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">😊</div>
+        <div class="stat-value">99%</div>
+        <div class="stat-label">Client Satisfaction</div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<main class="main-content">
+
+    <!-- Transaction Table Section -->
+    <div class="section-header">
+        <div class="section-badge"><span class="ico">💳</span> Client Transactions</div>
+        <div class="section-header-line"></div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search by name, project, city…" oninput="filterTable()">
+        </div>
+        <div class="filter-btns">
+            <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+            <button class="filter-btn" onclick="setFilter('Web Dev', this)">Web Dev</button>
+            <button class="filter-btn" onclick="setFilter('UI/UX Design', this)">UI/UX</button>
+            <button class="filter-btn" onclick="setFilter('Mobile App', this)">Mobile</button>
+            <button class="filter-btn" onclick="setFilter('E-Commerce', this)">E-Commerce</button>
+            <button class="filter-btn" onclick="setFilter('Tech Consult', this)">Consulting</button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table id="txTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>TX ID</th>
+                    <th>Client Name</th>
+                    <th>City, TN</th>
+                    <th>Project Type</th>
+                    <th>Project Details</th>
+                    <th class="col-amount">Amount</th>
+                    <th class="col-date">Completed</th>
+                    <th>Completed By</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="txBody">
+                <!-- Rows injected by JS -->
+            </tbody>
+        </table>
+        <div class="no-results" id="noResults">
+            <span class="emoji">🔍</span>
+            <p>No records matched your search.</p>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+    <p class="page-info" id="pageInfo"></p>
+
+    <!-- Team Section -->
+    <div class="team-section">
+        <div class="section-header">
+            <div class="section-badge"><span class="ico">👨‍💻</span> Project Completors</div>
+            <div class="section-header-line"></div>
+        </div>
+
+        <div class="team-grid">
+            <!-- Jegatheeshwar -->
+            <div class="team-card">
+                <div class="team-avatar">JT</div>
+                <div class="team-info">
+                    <div class="team-name">Jegatheeshwar</div>
+                    <span class="team-role">Founder &amp; CEO</span>
+                    <p class="team-bio">
+                        A visionary full-stack Web Developer, UI/UX Designer, and Technology Consultant with a deep passion for crafting pixel-perfect digital experiences. Jegatheeshwar leads Zero &amp; One Tech Solutions with a hands-on approach — designing stunning interfaces, building robust web applications, and providing strategic tech guidance to clients across Tamil Nadu and beyond.
+                    </p>
+                    <div class="team-skills">
+                        <span class="skill-tag">HTML / CSS</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">Node.js</span>
+                        <span class="skill-tag">Figma</span>
+                        <span class="skill-tag">UI/UX Design</span>
+                        <span class="skill-tag">Tech Consulting</span>
+                        <span class="skill-tag">Firebase</span>
+                    </div>
+                </div>
+                <div class="team-stat">
+                    <div class="team-stat-num" id="jega-count">8</div>
+                    <div class="team-stat-label">Projects Led</div>
+                </div>
+            </div>
+
+            <!-- Jai Surya -->
+            <div class="team-card">
+                <div class="team-avatar">JS</div>
+                <div class="team-info">
+                    <div class="team-name">Jai Surya</div>
+                    <span class="team-role">Co-Founder &amp; CTO</span>
+                    <p class="team-bio">
+                        An accomplished Software Developer and Technology Solution Provider, Jai Surya is the engineering backbone of Zero &amp; One Tech Solutions. He architects scalable systems, builds feature-rich applications, and ensures every technical solution is reliable and future-proof. His expertise spans across mobile platforms, cloud infrastructure, and end-to-end software delivery.
+                    </p>
+                    <div class="team-skills">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Flutter</span>
+                        <span class="skill-tag">Android</span>
+                        <span class="skill-tag">Cloud Arch.</span>
+                        <span class="skill-tag">REST APIs</span>
+                        <span class="skill-tag">DevOps</span>
+                        <span class="skill-tag">SQL / NoSQL</span>
+                        <span class="skill-tag">AWS / GCP</span>
+                    </div>
+                </div>
+                <div class="team-stat">
+                    <div class="team-stat-num" id="jai-count">7</div>
+                    <div class="team-stat-label">Projects Led</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- Scroll Top -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<!-- Footer -->
+<footer class="page-footer">
+    <p>© 2026 <a href="index.html">Zero &amp; One Tech Solutions Pvt. Ltd.</a> All rights reserved. | Tamil Nadu, India</p>
+</footer>
+
+<script>
+/* ======================================================
+   TRANSACTION DATA — 15 Tamil Nadu-based samples
+   Jegatheeshwar (J) = 8 projects | Jai Surya (S) = 7 projects
+   Prices: Web Dev=4000, Software=3500, UI/UX=2000, Consult=1000, Solution=1500
+   ====================================================== */
+const TRANSACTIONS = [
+  { id:"ZO-001", client:"Arjun Murugan",     city:"Chennai",        type:"Web Dev",      details:"Business Portfolio Website",              amount:4000, date:"2025-07-27", by:"J" }, 
+  { id:"ZO-002", client:"Priya Selvam",      city:"Coimbatore",     type:"UI/UX Design", details:"Mobile App Redesign – E-wallet",          amount:2000, date:"2025-08-10", by:"S" }, 
+  { id:"ZO-003", client:"Karthik Rajan",     city:"Madurai",        type:"Web Dev",      details:"Online Textile Store Platform",           amount:4000, date:"2025-08-25", by:"J" }, 
+  { id:"ZO-004", client:"Vijaya Lakshmi",    city:"Tiruchirappalli",type:"Software Project",   details:"Grocery Delivery App (Android)",    amount:3500, date:"2025-09-08", by:"S" }, 
+  { id:"ZO-005", client:"Senthil Kumar",     city:"Salem",          type:"Tech Consult", details:"IT Infrastructure Audit & Strategy",      amount:1000, date:"2025-09-22", by:"J" }, 
+  { id:"ZO-006", client:"Deepa Nair",        city:"Erode",          type:"Web Dev",      details:"Hospital Management Web Portal",          amount:4000, date:"2025-10-06", by:"S" }, 
+  { id:"ZO-007", client:"Manikandan S",      city:"Tirunelveli",    type:"UI/UX Design", details:"SaaS Dashboard UI Kit",                   amount:2000, date:"2025-10-20", by:"J" }, 
+  { id:"ZO-008", client:"Sathya Priya",      city:"Vellore",        type:"Web Dev",      details:"Jewellery E-Commerce Store",              amount:4000, date:"2025-11-04", by:"S" }, 
+  { id:"ZO-009", client:"Balamurugan K",     city:"Thoothukudi",    type:"Software Project",   details:"Logistics Tracking App (iOS & Android)",amount:3500, date:"2025-11-18", by:"J" }, 
+  { id:"ZO-010", client:"Kavitha Devi",      city:"Dindigul",       type:"Web Dev",      details:"School Management System",                amount:4000, date:"2025-12-02", by:"S" }, 
+  { id:"ZO-011", client:"Arun Prakash",      city:"Thanjavur",      type:"Tech Consult", details:"Cloud Migration Consulting (AWS)",        amount:1000, date:"2025-12-16", by:"J" }, 
+  { id:"ZO-012", client:"Meena Kumari",      city:"Nagercoil",      type:"UI/UX Design", details:"Restaurant Ordering App UI",              amount:2000, date:"2026-01-05", by:"S" }, 
+  { id:"ZO-013", client:"Ganesh Babu",       city:"Kancheepuram",   type:"Web Dev",      details:"Real Estate Listings Website",            amount:4000, date:"2026-01-20", by:"J" }, 
+  { id:"ZO-014", client:"Revathi Mohan",     city:"Tiruppur",       type:"Web Dev",      details:"Garment Export B2B Portal",               amount:4000, date:"2026-02-05", by:"S" }, 
+  { id:"ZO-015", client:"Palani Swamy",      city:"Namakkal",       type:"Software Project",   details:"Finance Tracker App",               amount:3500, date:"2026-02-20", by:"J" },];
+
+/* ======================================================
+   STATE
+   ====================================================== */
+const PER_PAGE = 10;
+let currentPage = 1;
+let currentFilter = 'all';
+let searchTerm = '';
+
+/* ======================================================
+   HELPERS
+   ====================================================== */
+function fmt(amount) {
+    if (amount >= 100000) return '₹' + (amount/100000).toFixed(1) + 'L';
+    return '₹' + amount.toLocaleString('en-IN');
+}
+
+function fmtDate(d) {
+    const dt = new Date(d);
+    return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+function typeClass(t) {
+    return {'Web Dev':'type-web','UI/UX Design':'type-design','Mobile App':'type-mobile','Tech Consult':'type-consult','E-Commerce':'type-ecom'}[t] || 'type-web';
+}
+
+function completorHTML(by) {
+    if (by === 'J') return `<span class="completor-tag tag-jega"><span class="avatar">JT</span> Jegatheeshwar</span>`;
+    return `<span class="completor-tag tag-jai"><span class="avatar">JS</span> Jai Surya</span>`;
+}
+
+/* ======================================================
+   FILTER & RENDER
+   ====================================================== */
+function getFiltered() {
+    return TRANSACTIONS.filter(t => {
+        const matchFilter = currentFilter === 'all' || t.type === currentFilter;
+        const q = searchTerm.toLowerCase();
+        const matchSearch = !q ||
+            t.client.toLowerCase().includes(q) ||
+            t.city.toLowerCase().includes(q)   ||
+            t.type.toLowerCase().includes(q)   ||
+            t.details.toLowerCase().includes(q)||
+            t.id.toLowerCase().includes(q);
+        return matchFilter && matchSearch;
+    });
+}
+
+function render() {
+    const filtered = getFiltered();
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+    currentPage = Math.min(currentPage, totalPages);
+    const start = (currentPage - 1) * PER_PAGE;
+    const slice = filtered.slice(start, start + PER_PAGE);
+
+    const tbody = document.getElementById('txBody');
+    const noRes = document.getElementById('noResults');
+
+    // Stagger delay
+    tbody.innerHTML = slice.map((t, i) => {
+        return `<tr style="animation-delay:${i * 0.04}s" data-type="${t.type}">
+            <td style="color:var(--muted);font-size:0.8rem;font-weight:600;">${start + i + 1}</td>
+            <td><span class="tx-id">${t.id}</span></td>
+            <td>
+                <div class="client-name">${t.client}</div>
+            </td>
+            <td><div class="client-loc">📍 ${t.city}, TN</div></td>
+            <td><span class="project-type ${typeClass(t.type)}">${t.type}</span></td>
+            <td style="max-width:200px;font-size:0.85rem;color:var(--muted);">${t.details}</td>
+            <td class="col-amount"><span class="amount">${fmt(t.amount)}</span></td>
+            <td class="col-date" style="color:var(--muted);font-size:0.82rem;">${fmtDate(t.date)}</td>
+            <td>${completorHTML(t.by)}</td>
+            <td><span class="status-badge">Completed</span></td>
+        </tr>`;
+    }).join('');
+
+    noRes.style.display = total === 0 ? 'block' : 'none';
+
+    // Pagination
+    renderPagination(totalPages);
+    document.getElementById('pageInfo').textContent = total > 0
+        ? `Showing ${start + 1}–${Math.min(start + PER_PAGE, total)} of ${total} records`
+        : '';
+
+    // Update team counts
+    const jCount = TRANSACTIONS.filter(t => t.by === 'J').length;
+    const sCount = TRANSACTIONS.filter(t => t.by === 'S').length;
+    document.getElementById('jega-count').textContent = jCount;
+    document.getElementById('jai-count').textContent = sCount;
+}
+
+function renderPagination(totalPages) {
+    const pg = document.getElementById('pagination');
+    pg.innerHTML = '';
+    if (totalPages <= 1) return;
+
+    const mkBtn = (label, page, isActive) => {
+        const b = document.createElement('button');
+        b.className = 'page-btn' + (isActive ? ' active' : '');
+        b.textContent = label;
+        if (!isActive) b.onclick = () => { currentPage = page; render(); window.scrollTo({top: 500, behavior:'smooth'}); };
+        return b;
+    };
+
+    pg.appendChild(mkBtn('«', 1, currentPage === 1));
+    pg.appendChild(mkBtn('‹', currentPage - 1, currentPage === 1));
+
+    for (let p = 1; p <= totalPages; p++) {
+        if (p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1) {
+            pg.appendChild(mkBtn(p, p, p === currentPage));
+        } else if (Math.abs(p - currentPage) === 2) {
+            const dots = document.createElement('span');
+            dots.textContent = '…';
+            dots.style.cssText = 'color:var(--muted);padding:0 4px;line-height:38px;';
+            pg.appendChild(dots);
+        }
+    }
+
+    pg.appendChild(mkBtn('›', currentPage + 1, currentPage === totalPages));
+    pg.appendChild(mkBtn('»', totalPages, currentPage === totalPages));
+}
+
+/* ======================================================
+   EVENT HANDLERS
+   ====================================================== */
+function setFilter(type, btn) {
+    currentFilter = type;
+    currentPage = 1;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+}
+
+function filterTable() {
+    searchTerm = document.getElementById('searchInput').value;
+    currentPage = 1;
+    render();
+}
+
+/* ======================================================
+   SCROLL TO TOP
+   ====================================================== */
+window.addEventListener('scroll', () => {
+    const btn = document.getElementById('scrollTop');
+    btn.classList.toggle('visible', window.scrollY > 400);
+});
+
+/* ======================================================
+   INIT
+   ====================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+    render();
+});
+</script>
+
+</body>
+</html>

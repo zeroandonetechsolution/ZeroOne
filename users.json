@@ -2,9 +2,9 @@
   "users": [
     {
       "id": "admin-001",
-      "username": "zeroandone",
+      "username": "jega",
       "email": "zeroandone@zeroone.site",
-      "passwordHash": "$2a$10$c2i/BmFIUorsOYgDUDp/puE9Yzen9CM17rEXD3McHBTBMasg7eAnK",
+      "passwordHash": "$2a$10$Hl.IG8NJE8Hlo0FTg2AFuud.Vs.PTW7BLkFlTxD6A4OuC8Ur/exgC",
       "fullName": "Primary Admin",
       "role": "admin",
       "billAmount": 0,

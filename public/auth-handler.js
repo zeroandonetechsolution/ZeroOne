@@ -47,14 +47,14 @@ const AuthHandler = {
             if (this.authPageType === 'admin') {
                 const isMasterAdmin = (user.username === 'jega');
                 
-                if (user.role !== 'admin' && !isMasterAdmin) {
+                if (user.role.toLowerCase() !== 'admin' && !isMasterAdmin) {
                     await this.logout();
                     throw new Error("Access Denied: Admin privileges required.");
                 }
             }
 
             // Redirect based on role
-            if (user.role === 'admin' || user.username === 'jega') {
+            if (user.role.toLowerCase() === 'admin' || user.username === 'jega') {
                 window.location.href = 'admin-dashboard.html';
             } else {
                 window.location.href = 'payment.html';

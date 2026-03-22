@@ -11,6 +11,7 @@
   "author": "Zero & One Tech Solutions",
   "license": "ISC",
   "dependencies": {
+    "@supabase/supabase-js": "^2.99.3",
     "bcryptjs": "^2.4.3",
     "connect-mongo": "^6.0.0",
     "cors": "^2.8.5",

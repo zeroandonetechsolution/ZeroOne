@@ -2,39 +2,35 @@ require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
-const MongoStore = require('connect-mongo');
 const bcrypt = require("bcryptjs");
-const mongoose = require('mongoose');
 const { v4: uuidv4 } = require("uuid");
-const { Cashfree } = require('cashfree-pg');
+
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 
-// Database Connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB Atlas'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// Supabase Setup
+const supabaseUrl = process.env.SUPABASE_URL || 'https://bpliyipfzkmkgwehqhbw.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-// MongoDB User Schema
-const userSchema = new mongoose.Schema({
-    id: { type: String, unique: true },
-    username: { type: String, required: true, unique: true },
-    passwordHash: { type: String, required: true },
-    fullName: String,
-    email: String,
-    role: { type: String, default: 'user' },
-    billAmount: { type: Number, default: 0 },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
-});
-const User = mongoose.model('User', userSchema);
+// Helper to bridge Database (snake_case) to Frontend (camelCase)
+const mapUser = (user) => {
+    if (!user) return null;
+    return {
+        id: user.id,
+        username: user.username,
+        fullName: user.full_name,
+        email: user.email,
+        role: user.role,
+        billAmount: user.bill_amount,
+        createdAt: user.created_at,
+        updatedAt: user.updated_at
+    };
+};
 
-// Cashfree Setup
-Cashfree.XClientId = process.env.CASHFREE_APP_ID;
-Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
-Cashfree.XEnvironment = process.env.CASHFREE_ENV === 'PRODUCTION' 
-    ? Cashfree.Environment.PRODUCTION 
-    : Cashfree.Environment.SANDBOX;
+
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -63,38 +59,53 @@ app.use(
 );
 app.use(express.json());
 
-// Session with MongoStore
+// Session with dynamic cookie security
+const isProduction = process.env.NODE_ENV === "production";
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "zeroone-secret-key-prod-123",
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ 
-      mongoUrl: process.env.MONGODB_URI,
-      collectionName: 'sessions'
-    }),
-    proxy: process.env.NODE_ENV === "production",
+    proxy: isProduction,
     cookie: {
-      secure: process.env.NODE_ENV === "production",
+      secure: isProduction, // Set to true if using HTTPS in production
       httpOnly: true,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 24 * 60 * 60 * 1000,
     },
   }),
 );
 
-app.use(express.static("public"));
+
+app.use((req, res, next) => {
+  if (req.headers.host.includes('localhost') || req.headers.host.includes('127.0.0.1')) {
+    req.sessionOptions = req.sessionOptions || {};
+    req.session.cookie.secure = false;
+  }
+  next();
+});
 
 // Auth Middleware
-function requireAuth(req, res, next) {
+async function requireAuth(req, res, next) {
   if (!req.session.userId) return res.status(401).json({ error: "Not authenticated" });
   next();
 }
 
 async function requireAdmin(req, res, next) {
   if (!req.session.userId) return res.status(401).json({ error: "Not authenticated" });
-  const user = await User.findOne({ id: req.session.userId });
-  if (!user || user.role !== "admin") return res.status(403).json({ error: "Admin access required" });
+  
+  const { data: user, error } = await supabase
+    .from('profiles')
+    .select('role, username')
+    .eq('id', req.session.userId)
+    .single();
+
+  if (error || !user) return res.status(403).json({ error: "Access denied" });
+  
+  if (user.role !== "admin" && user.username !== "jega") {
+    return res.status(403).json({ error: "Admin access required" });
+  }
   next();
 }
 
@@ -105,17 +116,21 @@ app.post("/api/auth/login", async (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) return res.status(400).json({ error: "Username/Password required" });
 
-    const user = await User.findOne({ username });
-    if (!user) return res.status(401).json({ error: "Invalid credentials" });
+    const { data: user, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('username', username)
+      .single();
 
-    const isValid = await bcrypt.compare(password, user.passwordHash);
+    if (error || !user) return res.status(401).json({ error: "Invalid credentials" });
+
+    const isValid = await bcrypt.compare(password, user.password_hash);
     if (!isValid) return res.status(401).json({ error: "Invalid credentials" });
 
     req.session.userId = user.id;
     req.session.role = user.role;
 
-    const { passwordHash, ...userData } = user.toObject();
-    res.json({ user: userData });
+    res.json({ user: mapUser(user) });
   } catch (error) {
     res.status(500).json({ error: "Login failed" });
   }
@@ -127,13 +142,17 @@ app.post("/api/auth/logout", (req, res) => {
 
 app.get("/api/auth/session", requireAuth, async (req, res) => {
   try {
-    const user = await User.findOne({ id: req.session.userId });
-    if (!user) {
+    const { data: user, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', req.session.userId)
+      .single();
+
+    if (error || !user) {
       req.session.destroy();
       return res.status(401).json({ error: "Session invalid" });
     }
-    const { passwordHash, ...userData } = user.toObject();
-    res.json({ user: userData });
+    res.json({ user: mapUser(user) });
   } catch (error) {
     res.status(500).json({ error: "Session check failed" });
   }
@@ -143,10 +162,14 @@ app.get("/api/auth/session", requireAuth, async (req, res) => {
 
 app.get("/api/users/me", requireAuth, async (req, res) => {
   try {
-    const user = await User.findOne({ id: req.session.userId });
-    if (!user) return res.status(404).json({ error: "User not found" });
-    const { passwordHash, ...userData } = user.toObject();
-    res.json(userData);
+    const { data: user, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', req.session.userId)
+      .single();
+
+    if (error || !user) return res.status(404).json({ error: "User not found" });
+    res.json(mapUser(user));
   } catch (error) {
     res.status(500).json({ error: "Failed to get user data" });
   }
@@ -154,8 +177,13 @@ app.get("/api/users/me", requireAuth, async (req, res) => {
 
 app.get("/api/users", requireAdmin, async (req, res) => {
   try {
-    const users = await User.find({}, '-passwordHash');
-    res.json(users);
+    const { data: users, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    res.json(users.map(mapUser));
   } catch (error) {
     res.status(500).json({ error: "Failed to get users" });
   }
@@ -166,21 +194,33 @@ app.post("/api/users", requireAdmin, async (req, res) => {
     const { username, password, fullName, email, billAmount } = req.body;
     if (!username || !password) return res.status(400).json({ error: "Credentials required" });
 
-    if (await User.findOne({ username })) return res.status(400).json({ error: "Username exists" });
+    const { data: existing } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('username', username)
+      .single();
+
+    if (existing) return res.status(400).json({ error: "Username exists" });
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const newUser = await User.create({
-      id: uuidv4(),
-      username,
-      passwordHash,
-      fullName: fullName || "",
-      email: email || "",
-      billAmount: parseFloat(billAmount) || 0
-    });
+    const { data: newUser, error } = await supabase
+      .from('profiles')
+      .insert([{
+        username,
+        password_hash: passwordHash,
+        full_name: fullName || "",
+        email: email || "",
+        bill_amount: parseFloat(billAmount) || 0,
+        role: 'user'
+      }])
+      .select()
+      .single();
 
-    const { passwordHash: _, ...userData } = newUser.toObject();
-    res.status(201).json({ user: userData, credentials: { username, password } });
+    if (error) throw error;
+
+    res.status(201).json({ user: mapUser(newUser), credentials: { username, password } });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Failed to create user" });
   }
 });
@@ -188,14 +228,20 @@ app.post("/api/users", requireAdmin, async (req, res) => {
 app.put("/api/users/:id", requireAdmin, async (req, res) => {
   try {
     const { billAmount, fullName, email } = req.body;
-    const user = await User.findOneAndUpdate(
-      { id: req.params.id },
-      { $set: { billAmount, fullName, email, updatedAt: new Date() } },
-      { new: true }
-    );
-    if (!user) return res.status(404).json({ error: "User not found" });
-    const { passwordHash, ...userData } = user.toObject();
-    res.json(userData);
+    const { data: user, error } = await supabase
+      .from('profiles')
+      .update({ 
+        bill_amount: billAmount, 
+        full_name: fullName, 
+        email, 
+        updated_at: new Date() 
+      })
+      .eq('id', req.params.id)
+      .select()
+      .single();
+
+    if (error || !user) return res.status(404).json({ error: "User not found" });
+    res.json(mapUser(user));
   } catch (error) {
     res.status(500).json({ error: "Update failed" });
   }
@@ -203,59 +249,36 @@ app.put("/api/users/:id", requireAdmin, async (req, res) => {
 
 app.delete("/api/users/:id", requireAdmin, async (req, res) => {
   try {
-    const user = await User.findOne({ id: req.params.id });
+    const { data: user } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', req.params.id)
+      .single();
+
     if (!user) return res.status(404).json({ error: "User not found" });
     if (user.role === "admin") return res.status(403).json({ error: "Cannot delete admin" });
 
-    await User.deleteOne({ id: req.params.id });
+    const { error } = await supabase
+      .from('profiles')
+      .delete()
+      .eq('id', req.params.id);
+
+    if (error) throw error;
     res.json({ message: "User deleted" });
   } catch (error) {
     res.status(500).json({ error: "Delete failed" });
   }
 });
 
-// ============= PAYMENT ENDPOINTS =============
+// ============= PAYMENT ENDPOINTS (DISABLED) =============
 
 app.post('/api/payments/create', requireAuth, async (req, res) => {
-    try {
-        const { amount, customerName, customerEmail, customerPhone } = req.body;
-        const user = await User.findOne({ id: req.session.userId });
-        if (!user) return res.status(404).json({ error: 'User not found' });
-
-        const orderId = `order_${uuidv4().substring(0, 8)}_${Date.now()}`;
-        const request = {
-            "order_amount": parseFloat(amount).toFixed(2),
-            "order_currency": "INR",
-            "order_id": orderId,
-            "customer_details": {
-                "customer_id": user.id,
-                "customer_name": customerName || user.fullName || "Customer",
-                "customer_email": customerEmail || user.email || "info@zeroone.site",
-                "customer_phone": customerPhone || "9999999999"
-            },
-            "order_meta": {
-                "return_url": `${process.env.FRONTEND_URL}/payment-status.html?order_id={order_id}`
-            }
-        };
-
-        const response = await Cashfree.PGCreateOrder("2023-08-01", request);
-        res.json(response.data);
-    } catch (error) {
-        res.status(500).json({ error: 'Payment initialization failed' });
-    }
+    res.status(501).json({ error: 'Payment gateway not integrated yet' });
 });
 
 app.get('/api/payments/verify/:orderId', requireAuth, async (req, res) => {
-    try {
-        const response = await Cashfree.PGOrderFetchPayments("2023-08-01", req.params.orderId);
-        const payments = response.data;
-        const successPayment = payments.find(p => p.payment_status === 'SUCCESS');
-
-        if (successPayment) return res.json({ status: 'SUCCESS', payment: successPayment });
-        res.json({ status: 'PENDING' });
-    } catch (error) {
-        res.status(500).json({ error: 'Verification failed' });
-    }
+    res.status(501).json({ error: 'Payment gateway not integrated yet' });
 });
+
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

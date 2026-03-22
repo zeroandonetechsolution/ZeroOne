@@ -6,7 +6,10 @@
 // Set this to your deployed backend URL (e.g., https://zero-one-api.onrender.com)
 // If empty, it will use the current domain (localhost or firebase)
 const PROD_API_URL = 'https://zeroone-o0u0.onrender.com'; 
-const API_BASE_URL = PROD_API_URL || window.location.origin;
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? window.location.origin 
+    : PROD_API_URL;
+
 
 const Core = {
     currentUser: null,

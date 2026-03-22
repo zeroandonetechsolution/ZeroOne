@@ -85,7 +85,8 @@ const Core = {
         }
 
         // Security: Kick non-admins out of admin dashboard
-        if (currentPage === 'admin-dashboard.html' && role !== 'admin' && !isMasterAdmin) {
+        if (currentPage === 'admin-dashboard.html' && role.toLowerCase() !== 'admin' && !isMasterAdmin) {
+
             window.location.href = 'index.html';
         }
     },

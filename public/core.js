@@ -7,8 +7,9 @@
 // If empty, it will use the current domain (localhost or firebase)
 const PROD_API_URL = 'https://zeroone-o0u0.onrender.com'; 
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? window.location.origin 
+    ? 'http://localhost:3000' 
     : PROD_API_URL;
+
 
 
 const Core = {

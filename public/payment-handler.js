@@ -150,45 +150,64 @@ const PaymentHandler = {
         });
     },
 
-    handleCashfreePayment: async function() {
+    handlePayUPayment: async function() {
         if (this.currentBillAmount <= 0) return alert("No pending bill amount.");
         
-        const btn = document.getElementById('cashfree-pay-btn');
-        if (btn) {
-            btn.disabled = true;
-            btn.textContent = "Processing...";
-        }
-
         try {
-            // 1. Create Order on Backend
-            const response = await fetch(`${API_BASE_URL}/api/payments/create`, {
+            // 1. Get transaction hash and details from backend
+            const response = await fetch(`${API_BASE_URL}/api/payments/payu/hash`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ amount: this.currentBillAmount })
+                body: JSON.stringify({ 
+                    amount: this.currentBillAmount,
+                    productInfo: "Service Invoice"
+                })
             });
 
-            if (!response.ok) throw new Error("Could not create payment session");
+            if (!response.ok) throw new Error("Could not initialize PayU session");
             
             const data = await response.json();
             
-            // 2. Open Cashfree Checkout
-            let checkoutOptions = {
-                paymentSessionId: data.payment_session_id,
-                redirectTarget: "_self", // Or "_modal"
+            // 2. Create a form and submit it to PayU
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = data.action;
+
+            const fields = {
+                key: data.key,
+                txnid: data.txnid,
+                amount: data.amount,
+                productinfo: data.productInfo,
+                firstname: data.firstname,
+                email: data.email,
+                phone: data.phone || '9999999999',
+                surl: data.surl,
+                furl: data.furl,
+                hash: data.hash,
+                service_provider: 'payu_paisa'
             };
 
-            this.cashfree.checkout(checkoutOptions);
+            for (const key in fields) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = fields[key];
+                form.appendChild(input);
+            }
+
+            document.body.appendChild(form);
+            form.submit();
 
         } catch (error) {
-            console.error("Payment error:", error);
+            console.error("PayU error:", error);
             alert("Payment failed to initialize: " + error.message);
-        } finally {
-            if (btn) {
-                btn.disabled = false;
-                btn.textContent = "Pay via Cashfree";
-            }
         }
+    },
+
+    // Legacy or Other method placeholder
+    handleCashfreePayment: function() {
+        alert("This method is currently using the new PayU integration. Please use the 'Pay Now' buttons.");
     },
 
     requestVerification: function() {

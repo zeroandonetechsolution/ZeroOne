@@ -80,8 +80,8 @@ const Core = {
         
         const isMasterAdmin = (userData && userData.username === 'jega');
 
-        // Prevent logged-in users from hitting login pages
-        if (currentPage === 'user-login.html' || currentPage === 'admin-login.html') {
+        // Prevent logged-in users from hitting login pages and the public home page
+        if (currentPage === 'user-login.html' || currentPage === 'admin-login.html' || currentPage === 'index.html' || currentPage === '') {
             window.location.href = (role === 'admin' || isMasterAdmin) ? 'admin-dashboard.html' : 'payment.html';
         }
 

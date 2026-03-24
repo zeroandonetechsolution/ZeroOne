@@ -4,6 +4,7 @@ const cors = require("cors");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto");
 
 const { createClient } = require('@supabase/supabase-js');
 
@@ -282,5 +283,67 @@ app.get('/api/payments/verify/:orderId', requireAuth, async (req, res) => {
     res.status(501).json({ error: 'Payment gateway not integrated yet' });
 });
 
+// ============= PAYU INTEGRATION =============
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.post('/api/payments/payu/hash', requireAuth, async (req, res) => {
+    try {
+        const { amount, productInfo } = req.body;
+        const { data: user, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', req.session.userId)
+            .single();
+
+        if (error || !user) return res.status(404).json({ error: "User not found" });
+
+        const key = process.env.PAYU_MERCHANT_KEY;
+        const salt = process.env.PAYU_SALT;
+        const txnid = "TXN" + Date.now();
+        const firstname = user.full_name || user.username || 'Customer';
+        const email = user.email || 'customer@example.com';
+        
+        // Use 1 if amount is 0 just for testing? No, use provided amount.
+        const cleanedAmount = parseFloat(amount).toFixed(2);
+
+        // sha512(key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5||||||SALT)
+        const hashString = `${key}|${txnid}|${cleanedAmount}|${productInfo}|${firstname}|${email}|||||||||||${salt}`;
+        const hash = crypto.createHash('sha512').update(hashString).digest('hex');
+
+        res.json({
+            hash: hash,
+            txnid: txnid,
+            key: key,
+            amount: cleanedAmount,
+            firstname: firstname,
+            email: email,
+            phone: user.username.replace('REF', ''), // Using Ref ID as phone fallback if needed?
+            productInfo: productInfo,
+            surl: `${process.env.FRONTEND_URL}/payment-success.html`,
+            furl: `${process.env.FRONTEND_URL}/payment-failure.html`,
+            action: process.env.PAYU_ENV === 'test' ? 'https://test.payu.in/_payment' : 'https://secure.payu.in/_payment'
+        });
+    } catch (error) {
+        console.error("Hash generation error:", error);
+        res.status(500).json({ error: "Failed to generate PayU hash" });
+    }
+});
+
+// Webhook / Return handlers
+app.post('/api/payments/payu/callback', (req, res) => {
+    // This is called by PayU after payment.
+    // In a production app, verify the hash here and update bill_amount to 0.
+    res.redirect(`${process.env.FRONTEND_URL}/payment-success.html`);
+});
+
+
+app.listen(PORT, async () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    
+    // Quick Supabase verification
+    const { data, error } = await supabase.from('profiles').select('id', { count: 'exact', head: true });
+    if (error) {
+        console.error("❌ Warning: Supabase initial check failed:", error.message);
+    } else {
+        console.log("✅ Supabase connection verified successfully!");
+    }
+});

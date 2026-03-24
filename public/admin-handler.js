@@ -6,9 +6,14 @@ const AdminHandler = {
         this.modal = document.getElementById('user-modal');
         this.form = document.getElementById('new-user-form');
         this.resultBox = document.getElementById('creation-result');
+        this.receiptModal = document.getElementById('receipt-modal');
+        this.receiptForm = document.getElementById('receipt-form');
 
         if (this.form) {
             this.form.addEventListener('submit', (e) => this.handleCreateUser(e));
+        }
+        if (this.receiptForm) {
+            this.receiptForm.addEventListener('submit', (e) => this.handleGenerateReceipt(e));
         }
 
         this.loadUsers();
@@ -62,6 +67,7 @@ const AdminHandler = {
                 <td>
                     <div style="display: flex; gap: 10px;">
                         <button class="btn-premium update-btn" onclick="AdminHandler.updateBill('${user.id}')">Update</button>
+                        <button class="btn-premium update-btn" style="background: rgba(99, 102, 241, 0.1); color: var(--primary); border: 1px solid rgba(99, 102, 241, 0.3);" onclick="AdminHandler.showReceiptModal('${user.id}', '${user.fullName || user.username}', '${user.username || 'No Ref ID'}')">Receipt</button>
                         <button class="btn-premium update-btn" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2);" onclick="AdminHandler.deleteUser('${user.id}')">Delete</button>
                     </div>
                 </td>
@@ -83,10 +89,118 @@ const AdminHandler = {
         this.modal.style.display = 'flex';
         this.form.reset();
         this.resultBox.style.display = 'none';
+        const actionsFooter = document.getElementById('modal-actions-footer');
+        if (actionsFooter) actionsFooter.style.display = 'flex';
+        
+        // Auto-generate Ref ID
+        document.getElementById('new-username').value = "REF" + new Date().getTime().toString().slice(-6) + Math.floor(Math.random() * 10);
     },
 
     hideModal: function() {
         this.modal.style.display = 'none';
+    },
+
+    showReceiptModal: function(userId, customerName, refId) {
+        if (!this.receiptModal) return;
+        document.getElementById('r-customer-name').textContent = customerName;
+        document.getElementById('r-ref-id').value = refId;
+        document.getElementById('r-name-hidden').value = customerName;
+        document.getElementById('r-user-id').value = userId;
+        
+        // Reset inputs
+        document.getElementById('r-work').value = 0;
+        document.getElementById('r-service').value = 0;
+        document.getElementById('r-hosting').value = 0;
+        document.getElementById('r-deployment').value = 0;
+        document.getElementById('r-gst').value = 0;
+        this.calculateReceiptTotal();
+        
+        this.receiptModal.style.display = 'flex';
+    },
+
+    hideReceiptModal: function() {
+        if (this.receiptModal) this.receiptModal.style.display = 'none';
+    },
+
+    toggleReceiptFields: function() {
+        const type = document.getElementById('r-type').value;
+        const websiteFields = document.getElementById('r-website-fields');
+        if (type === 'website') {
+            websiteFields.style.display = 'block';
+        } else {
+            websiteFields.style.display = 'none';
+            document.getElementById('r-hosting').value = 0;
+            document.getElementById('r-deployment').value = 0;
+        }
+        this.calculateReceiptTotal();
+    },
+
+    calculateReceiptTotal: function() {
+        const hosting = parseFloat(document.getElementById('r-hosting').value) || 0;
+        const deployment = parseFloat(document.getElementById('r-deployment').value) || 0;
+        const work = parseFloat(document.getElementById('r-work').value) || 0;
+        const service = parseFloat(document.getElementById('r-service').value) || 0;
+        const gst = parseFloat(document.getElementById('r-gst').value) || 0;
+
+        const type = document.getElementById('r-type').value;
+        let total = work + service + gst;
+        if (type === 'website') {
+            total += hosting + deployment;
+        }
+
+        document.getElementById('r-amount').value = total;
+    },
+
+    handleGenerateReceipt: function(e) {
+        e.preventDefault();
+        
+        const type = document.getElementById('r-type').value;
+        const receiptData = {
+            customerName: document.getElementById('r-name-hidden').value,
+            refId: document.getElementById('r-ref-id').value,
+            receiptId: "RC-" + new Date().toISOString().replace(/[-:T.]/g, '').substring(0, 14),
+            
+            // Amount Details
+            type: type,
+            work: parseFloat(document.getElementById('r-work').value) || 0,
+            service: parseFloat(document.getElementById('r-service').value) || 0,
+            hosting: parseFloat(document.getElementById('r-hosting').value) || 0,
+            deployment: parseFloat(document.getElementById('r-deployment').value) || 0,
+            gst: parseFloat(document.getElementById('r-gst').value) || 0,
+            amount: document.getElementById('r-amount').value
+        };
+        
+        // Cache locally
+        localStorage.setItem('current_receipt', JSON.stringify(receiptData));
+        
+        // --- Persistence: Push to User's Login Account ---
+        const userId = document.getElementById('r-user-id').value;
+        if (userId) {
+            fetch(`${API_BASE_URL}/api/users/${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ billAmount: parseFloat(receiptData.amount) })
+            }).then(() => {
+                this.loadUsers(); // Refresh the table
+            });
+        }
+        
+        this.hideReceiptModal();
+        const shareData = btoa(encodeURIComponent(JSON.stringify(receiptData)));
+        window.open(`receipt.html?data=${shareData}`, '_blank');
+    },
+
+    copyShareableLink: function() {
+        const dataStr = localStorage.getItem('current_receipt');
+        if (!dataStr) return alert("Generate an invoice first!");
+        
+        const shareData = btoa(encodeURIComponent(dataStr));
+        const url = `${window.location.origin}/receipt.html?data=${shareData}&customer=true`;
+        
+        navigator.clipboard.writeText(url).then(() => {
+            alert("Shareable invoice link copied to clipboard!");
+        });
     },
 
     handleCreateUser: async function(e) {
@@ -96,10 +210,11 @@ const AdminHandler = {
         btn.textContent = "Provisioning...";
 
         const fullname = document.getElementById('new-fullname').value;
-        const email = document.getElementById('new-email').value;
+        const email = document.getElementById('new-email').value || '';
+        const mobile = document.getElementById('new-mobile').value || '';
         const username = document.getElementById('new-username').value;
         const password = document.getElementById('new-password').value;
-        const bill = parseFloat(document.getElementById('new-bill').value);
+        const bill = parseFloat(document.getElementById('new-bill').value) || 0;
 
         try {
             const response = await fetch(`${API_BASE_URL}/api/users`, {
@@ -127,6 +242,17 @@ const AdminHandler = {
             // Show Success
             document.getElementById('res-id').textContent = data.credentials.username;
             document.getElementById('res-pw').textContent = data.credentials.password;
+            
+            // Store globally temporaily for the "Enter Receipt" button
+            window._lastCreatedUser = {
+                id: data.user.id,
+                username: data.credentials.username,
+                fullName: fullname
+            };
+
+            const actionsFooter = document.getElementById('modal-actions-footer');
+            if (actionsFooter) actionsFooter.style.display = 'none';
+
             this.resultBox.style.display = 'block';
             this.resultBox.scrollIntoView({ behavior: 'smooth' });
             btn.textContent = "Account Created";
@@ -139,6 +265,16 @@ const AdminHandler = {
             btn.disabled = false;
             btn.textContent = "Create Account";
         }
+    },
+
+    openReceiptFromCreation: function() {
+        if (!window._lastCreatedUser) return;
+        this.hideModal();
+        this.showReceiptModal(
+            window._lastCreatedUser.id, 
+            window._lastCreatedUser.fullName, 
+            window._lastCreatedUser.username
+        );
     },
 
     updateBill: async function(userId) {

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -31,39 +31,39 @@
         </a>
         <div style="display: flex; align-items: center; gap: 20px;">
             <span id="user-name-display" style="color: #a1a1aa; font-weight: 500;"></span>
-            <button id="logout-btn" class="btn-premium" style="background: rgba(255,255,255,0.05); font-size: 0.85rem; padding: 8px 16px;" onclick="Core.logout()">Logout</button>
+            <button id="logout-btn" class="btn-premium" style="background: var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); font-size: 0.85rem; padding: 8px 16px;" onclick="Core.logout()">Logout</button>
         </div>
     </header>
-
+    
     <main class="dashboard-container">
         <div class="bill-card glass-panel">
             <div class="bill-info">
                 <span class="status-badge status-unpaid" id="bill-status">Payment Pending</span>
                 <p style="color: #a1a1aa; margin-top: 20px;">Current Balance</p>
                 <h2 id="bill-amount">₹0.00</h2>
-                <p id="bill-date" style="color: #71717a; font-size: 0.9rem;">Last Updated: --</p>
+                <p id="bill-date" style="color: #71717a; font-size: 0.9rem; margin-top: 15px;">Last Updated: --</p>
             </div>
             <div>
-                <button class="btn-premium" style="background: var(--primary); padding: 15px 40px;" onclick="PaymentHandler.handleCashfreePayment()">Quick Pay</button>
+                <button class="btn-premium" style="background: var(--primary); padding: 15px 40px;" onclick="window.open('receipt.html?customer=true', '_blank')">Detailed Invoice</button>
             </div>
         </div>
 
         <h3 style="margin-bottom: 20px;">Payment Methods</h3>
         <div class="payment-options">
-            <div class="option-card glass-panel" id="cashfree-pay-btn" onclick="PaymentHandler.handleCashfreePayment()">
-                <h4 style="margin-bottom: 10px;">Cashfree PG</h4>
-                <p style="color: #71717a; font-size: 0.9rem; margin-bottom: 20px;">Card, NetBanking, Wallet & UPI</p>
+            <div class="option-card glass-panel" onclick="PaymentHandler.handlePayUPayment()">
+                <h4 style="margin-bottom: 10px;">NetBanking / Card</h4>
+                <p style="color: #71717a; font-size: 0.9rem; margin-bottom: 20px;">Pay securely via PayU</p>
                 <button class="btn-premium" style="width: 100%; background: var(--primary);">Pay Now</button>
             </div>
             <div class="option-card glass-panel" onclick="PaymentHandler.openPaymentModal('upi')">
                 <h4 style="margin-bottom: 10px;">Direct UPI</h4>
                 <p style="color: #71717a; font-size: 0.9rem; margin-bottom: 20px;">Instant verification via any UPI app</p>
-                <button class="btn-premium" style="width: 100%; background: rgba(255,255,255,0.05);">Select UPI</button>
+                <button class="btn-premium" style="width: 100%; background: var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);">Select UPI</button>
             </div>
             <div class="option-card glass-panel" onclick="PaymentHandler.openPaymentModal('qr')">
                 <h4 style="margin-bottom: 10px;">QR Code</h4>
                 <p style="color: #71717a; font-size: 0.9rem; margin-bottom: 20px;">Scan and pay securely</p>
-                <button class="btn-premium" style="width: 100%; background: rgba(255,255,255,0.05);">Show QR</button>
+                <button class="btn-premium" style="width: 100%; background: var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);">Show QR</button>
             </div>
         </div>
     </main>
@@ -89,6 +89,7 @@
 
             <div id="qr-modal-content" style="display: none;">
                 <h3 style="margin-bottom: 20px;">Scan QR Code</h3>
+
                 <div style="text-align: center; margin-bottom: 20px; background: white; padding: 20px; border-radius: 10px;">
                     <!-- User provided QR -->
                     <img id="payment-qr-code" src="assets/images/payment/qr%20code%20kvb.jpeg" alt="Payment QR" style="width: 200px; height: 200px; object-fit: contain;">

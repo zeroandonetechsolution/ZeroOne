@@ -59,6 +59,7 @@ body {
     justify-content: center;
     gap: 8px;
     font-family: 'Outfit', sans-serif;
+    color: #fff;
 }
 
 .btn-premium:hover {

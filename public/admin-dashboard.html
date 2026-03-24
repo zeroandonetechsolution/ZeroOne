@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" style="color-scheme: dark;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +29,7 @@
             background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
             color: #fff; padding: 8px 12px; border-radius: 8px; width: 120px;
         }
-        .update-btn { padding: 8px 16px; font-size: 0.85rem; background: var(--primary); }
+        .update-btn { padding: 8px 16px; font-size: 0.85rem; background: var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); }
 
         /* Modal Styles */
         .modal-overlay {
@@ -39,17 +39,24 @@
         }
         .modal-content {
             width: 100%; max-width: 500px; padding: 40px; position: relative;
+            max-height: 90vh; overflow-y: auto;
         }
+        /* Custom scrollbar for modal */
+        .modal-content::-webkit-scrollbar { width: 6px; }
+        .modal-content::-webkit-scrollbar-track { background: transparent; }
+        .modal-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+
         .close-modal {
             position: absolute; top: 20px; right: 20px; cursor: pointer; color: #71717a; font-size: 1.5rem;
         }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #a1a1aa; }
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%; padding: 12px; background: rgba(255,255,255,0.05);
             border: 1px solid var(--border); border-radius: 10px; color: #fff; box-sizing: border-box;
         }
-        .form-group input:focus { outline: none; border-color: var(--primary); }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); }
+        .form-group select option { background: #111116; color: #fff; }
         .modal-footer { display: flex; gap: 10px; margin-top: 30px; }
         .result-box {
             margin-top: 20px; padding: 20px; border-radius: 10px; background: rgba(16, 185, 129, 0.1);
@@ -64,7 +71,7 @@
             <span style="font-weight: 700; font-size: 1.2rem; color: #ef4444;">Admin Console <span style="font-weight: 300; opacity: 0.5;">v2</span></span>
         </div>
         <div style="display: flex; align-items: center; gap: 20px;">
-            <button class="btn-premium" style="background: rgba(255,255,255,0.05);" onclick="Core.logout()">Logout</button>
+            <button class="btn-premium" style="background: var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);" onclick="Core.logout()">Logout</button>
         </div>
     </header>
 
@@ -83,7 +90,7 @@
         <div class="user-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2>Customer Management</h2>
-                <button class="btn-premium" style="background: var(--primary);" onclick="AdminHandler.showModal()">+ New Customer</button>
+                <button class="btn-premium" style="background: var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);" onclick="AdminHandler.showModal()">+ New Customer</button>
             </div>
             
             <table class="user-list">
@@ -108,7 +115,7 @@
         <div class="modal-content glass-panel">
             <span class="close-modal" onclick="AdminHandler.hideModal()">&times;</span>
             <h2 style="margin-bottom: 10px;">Provision New Customer</h2>
-            <p style="color: #71717a; margin-bottom: 25px;">Create a new client account and generate credentials.</p>
+            <p style="color: #71717a; margin-bottom: 25px;">Create a new client account. The Ref ID is auto-generated.</p>
             
             <form id="new-user-form">
                 <div class="form-group">
@@ -116,31 +123,100 @@
                     <input type="text" id="new-fullname" placeholder="e.g. John Doe" required>
                 </div>
                 <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="new-email" placeholder="e.g. john@example.com" required>
+                    <label>Email Address <span style="color: #71717a; font-size: 0.8rem;">(Optional)</span></label>
+                    <input type="email" id="new-email" placeholder="e.g. john@example.com">
                 </div>
                 <div class="form-group">
-                    <label>Username / Ref ID (Used for Login)</label>
-                    <input type="text" id="new-username" placeholder="e.g. JD001" required>
+                    <label>Mobile Number</label>
+                    <input type="tel" id="new-mobile" placeholder="e.g. +91 9876543210" required>
+                </div>
+                <!-- Hidden Ref ID Field, auto-generated -->
+                <div class="form-group" style="display: none;">
+                    <input type="text" id="new-username" disabled>
                 </div>
                 <div class="form-group">
                     <label>Login Password</label>
                     <input type="password" id="new-password" placeholder="Set a password for the user" required>
                 </div>
-                <div class="form-group">
-                    <label>Initial Bill Amount (₹)</label>
-                    <input type="number" id="new-bill" value="0" required>
+                <!-- Initial Bill Amount hidden as it's generated via receipt -->
+                <div class="form-group" style="display: none;">
+                    <input type="number" id="new-bill" value="0">
                 </div>
 
                 <div id="creation-result" class="result-box">
                     <p style="color: #10b981; font-weight: 600; margin-bottom: 5px;">User Created Successfully!</p>
-                    <p style="font-size: 0.9rem; color: #a1a1aa;">Login: <span id="res-id" style="color: #fff;"></span></p>
+                    <p style="font-size: 0.9rem; color: #a1a1aa;">Login/Ref ID: <span id="res-id" style="color: #fff;"></span></p>
                     <p style="font-size: 0.9rem; color: #a1a1aa;">Password: <span id="res-pw" style="color: #fff;"></span></p>
+                    
+                    <button type="button" class="btn-premium" style="margin-top: 15px; width: 100%; font-size: 0.9rem; padding: 12px; background: var(--primary); color: #fff;" onclick="AdminHandler.openReceiptFromCreation()">View Detailed Invoice</button>
+                    <button type="button" class="btn-premium" style="margin-top: 10px; width: 100%; font-size: 0.8rem; padding: 10px; background: rgba(255, 255, 255, 0.05); color: #71717a;" onclick="AdminHandler.copyShareableLink()">Copy Shareable Link</button>
+                </div>
+
+                <div class="modal-footer" id="modal-actions-footer">
+                    <button type="button" class="btn-premium" style="background: rgba(255,255,255,0.05); flex: 1;" onclick="AdminHandler.hideModal()">Cancel</button>
+                    <button type="submit" id="create-btn" class="btn-premium" style="background: var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); flex: 2;">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Generate Invoice Modal -->
+    <div id="receipt-modal" class="modal-overlay">
+        <div class="modal-content glass-panel" style="max-height: 90vh; overflow-y: auto;">
+            <span class="close-modal" onclick="AdminHandler.hideReceiptModal()">&times;</span>
+            <h2 style="margin-bottom: 10px;">Generate Invoice</h2>
+            <p style="color: #71717a; margin-bottom: 25px;">Enter the exact billing details to generate an invoice for <span id="r-customer-name" style="color: #fff; font-weight: 600;"></span>.</p>
+            
+            <form id="receipt-form">
+                <input type="hidden" id="r-ref-id">
+                <input type="hidden" id="r-name-hidden">
+                <input type="hidden" id="r-user-id">
+
+                <div class="form-group">
+                    <label>Project Type</label>
+                    <select id="r-type" onchange="AdminHandler.toggleReceiptFields()" style="appearance: none; -webkit-appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns=%22http%3A//www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23ffffff%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpolyline points=%226 9 12 15 18 9%22%3E%3C/polyline%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 15px center; background-size: 16px;">
+                        <option value="other">Other Service</option>
+                        <option value="website">Website / App Deployment</option>
+                    </select>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label>Work Charge (₹)</label>
+                    <input type="number" id="r-work" value="0" required oninput="AdminHandler.calculateReceiptTotal()">
+                </div>
+                
+                <div class="form-group">
+                    <label>Service Charge (₹)</label>
+                    <input type="number" id="r-service" value="0" required oninput="AdminHandler.calculateReceiptTotal()">
+                </div>
+                
+                <!-- Fields for Website -->
+                <div id="r-website-fields" style="display: none;">
+                    <div class="form-group">
+                        <label>Hosting Fee (₹)</label>
+                        <input type="number" id="r-hosting" value="0" oninput="AdminHandler.calculateReceiptTotal()">
+                    </div>
+                    <div class="form-group">
+                        <label>Deployment Fee (₹)</label>
+                        <input type="number" id="r-deployment" value="0" oninput="AdminHandler.calculateReceiptTotal()">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>GST Amount (₹)</label>
+                    <input type="number" id="r-gst" value="0" required oninput="AdminHandler.calculateReceiptTotal()">
+                </div>
+
+                <div class="form-group">
+                    <label>Total Invoice Amount (₹) <span style="color:var(--primary); font-size:0.8rem">(Auto-Calculated)</span></label>
+                    <input type="number" id="r-amount" value="0" required readonly style="background: rgba(99,102,241,0.05); border-color: rgba(99,102,241,0.3); font-weight: bold; color: var(--primary);">
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn-premium" style="background: rgba(255,255,255,0.05); flex: 1;" onclick="AdminHandler.hideModal()">Cancel</button>
-                    <button type="submit" id="create-btn" class="btn-premium" style="background: var(--primary); flex: 2;">Create Account</button>
+                    <button type="button" class="btn-premium" style="background: rgba(255,255,255,0.05); flex: 1;" onclick="AdminHandler.hideReceiptModal()">Cancel</button>
+                    <button type="submit" class="btn-premium" style="background: var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); flex: 2;">Generate & View</button>
                 </div>
             </form>
         </div>

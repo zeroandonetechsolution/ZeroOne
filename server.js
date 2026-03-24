@@ -320,7 +320,7 @@ app.post('/api/payments/payu/hash', requireAuth, async (req, res) => {
             productInfo: productInfo,
             surl: `${process.env.FRONTEND_URL}/payment-success.html`,
             furl: `${process.env.FRONTEND_URL}/payment-failure.html`,
-            action: process.env.PAYU_ENV === 'test' ? 'https://test.payu.in/_payment' : 'https://secure.payu.in/_payment'
+            action: (process.env.PAYU_ENV === 'test' || process.env.PAYU_ENV === 'JS test') ? 'https://test.payu.in/_payment' : 'https://secure.payu.in/_payment'
         });
     } catch (error) {
         console.error("Hash generation error:", error);

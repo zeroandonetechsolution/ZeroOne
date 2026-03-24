@@ -93,11 +93,21 @@ const AdminHandler = {
         const actionsFooter = document.getElementById('modal-actions-footer');
         if (actionsFooter) actionsFooter.style.display = 'flex';
         
-        // Auto-generate a clean Ref ID: REF + 6 random digits
-        const refId = "REF" + Math.floor(100000 + Math.random() * 900000);
-        document.getElementById('new-username').value = refId;
+        // Clear Ref ID and generate it live from mobile input
+        document.getElementById('new-username').value = '';
         document.getElementById('create-btn').disabled = false;
         document.getElementById('create-btn').textContent = 'Create Account';
+
+        // Auto-generate Ref ID from mobile number (ZO + last 5 digits)
+        const mobileInput = document.getElementById('new-mobile');
+        mobileInput.oninput = function() {
+            const digits = mobileInput.value.replace(/\D/g, ''); // strip non-digits
+            if (digits.length >= 5) {
+                document.getElementById('new-username').value = 'ZO' + digits.slice(-5);
+            } else {
+                document.getElementById('new-username').value = '';
+            }
+        };
     },
 
     hideModal: function() {

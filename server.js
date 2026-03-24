@@ -198,10 +198,14 @@ app.post("/api/users", requireAdmin, async (req, res) => {
     const { username, password, fullName, email, billAmount, refId } = req.body;
     if (!username || !password) return res.status(400).json({ error: "Mobile number and password required" });
 
+    // Generate Ref ID: ZO + last 5 digits of mobile
+    const digits = username.replace(/\D/g, '');
+    const finalRefId = refId || ('ZO' + (digits.length >= 5 ? digits.slice(-5) : Math.floor(10000 + Math.random() * 90000)));
+
     const { data: existing } = await supabase
       .from('profiles')
       .select('id')
-      .or(`username.eq."${username}",ref_id.eq."${refId}"`)
+      .or(`username.eq."${username}",ref_id.eq."${finalRefId}"`)
       .limit(1);
 
     if (existing && existing.length > 0) return res.status(400).json({ error: "User already exists with this mobile or Ref ID" });
@@ -211,7 +215,7 @@ app.post("/api/users", requireAdmin, async (req, res) => {
       .from('profiles')
       .insert([{
         username: username, // Mobile
-        ref_id: refId,      // Ref ID
+        ref_id: finalRefId, // ZO + last 5 digits
         password_hash: passwordHash,
         full_name: fullName || "",
         email: email || "",

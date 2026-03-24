@@ -20,7 +20,8 @@ const mapUser = (user) => {
     if (!user) return null;
     return {
         id: user.id,
-        username: user.username,
+        username: user.username, // This is now mobile number
+        refId: user.ref_id,      // This is the Ref ID for invoices
         fullName: user.full_name,
         email: user.email,
         role: user.role,
@@ -122,7 +123,7 @@ app.post("/api/auth/login", async (req, res) => {
     const { data: user, error } = await supabase
       .from('profiles')
       .select('*')
-      .eq('username', username)
+      .or(`username.eq."${username}",ref_id.eq."${username}"`)
       .single();
 
     if (error || !user) return res.status(401).json({ error: "Invalid credentials" });
@@ -194,22 +195,23 @@ app.get("/api/users", requireAdmin, async (req, res) => {
 
 app.post("/api/users", requireAdmin, async (req, res) => {
   try {
-    const { username, password, fullName, email, billAmount } = req.body;
-    if (!username || !password) return res.status(400).json({ error: "Credentials required" });
+    const { username, password, fullName, email, billAmount, refId } = req.body;
+    if (!username || !password) return res.status(400).json({ error: "Mobile number and password required" });
 
     const { data: existing } = await supabase
       .from('profiles')
       .select('id')
-      .eq('username', username)
-      .single();
+      .or(`username.eq."${username}",ref_id.eq."${refId}"`)
+      .limit(1);
 
-    if (existing) return res.status(400).json({ error: "Username exists" });
+    if (existing && existing.length > 0) return res.status(400).json({ error: "User already exists with this mobile or Ref ID" });
 
     const passwordHash = await bcrypt.hash(password, 10);
     const { data: newUser, error } = await supabase
       .from('profiles')
       .insert([{
-        username,
+        username: username, // Mobile
+        ref_id: refId,      // Ref ID
         password_hash: passwordHash,
         full_name: fullName || "",
         email: email || "",
@@ -219,7 +221,10 @@ app.post("/api/users", requireAdmin, async (req, res) => {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+        console.error("Supabase insert error:", error);
+        throw error;
+    }
 
     res.status(201).json({ user: mapUser(newUser), credentials: { username, password } });
   } catch (error) {
@@ -316,7 +321,7 @@ app.post('/api/payments/payu/hash', requireAuth, async (req, res) => {
             amount: cleanedAmount,
             firstname: firstname,
             email: email,
-            phone: user.username.replace('REF', ''), // Using Ref ID as phone fallback if needed?
+            phone: user.username, // Using Mobile Number (stored in username)
             productInfo: productInfo,
             surl: `${process.env.FRONTEND_URL}/payment-success.html`,
             furl: `${process.env.FRONTEND_URL}/payment-failure.html`,

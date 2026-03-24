@@ -54,8 +54,9 @@ const AdminHandler = {
 
             row.innerHTML = `
                 <td>
-                    <div style="font-weight: 600;">${user.username || 'No Ref ID'}</div>
-                    <div style="font-size: 0.8rem; color: #71717a;">${user.fullName || ''}</div>
+                    <div style="font-weight: 600;">${user.refId || 'No Ref ID'}</div>
+                    <div style="font-size: 0.8rem; color: #a1a1aa;">${user.fullName || ''}</div>
+                    <div style="font-size: 0.75rem; color: #71717a;">Mobile: ${user.username || 'N/A'}</div>
                 </td>
                 <td style="color: #a1a1aa;">${user.email || 'N/A'}</td>
                 <td>
@@ -67,7 +68,7 @@ const AdminHandler = {
                 <td>
                     <div style="display: flex; gap: 10px;">
                         <button class="btn-premium update-btn" onclick="AdminHandler.updateBill('${user.id}')">Update</button>
-                        <button class="btn-premium update-btn" style="background: rgba(99, 102, 241, 0.1); color: var(--primary); border: 1px solid rgba(99, 102, 241, 0.3);" onclick="AdminHandler.showReceiptModal('${user.id}', '${user.fullName || user.username}', '${user.username || 'No Ref ID'}')">Receipt</button>
+                        <button class="btn-premium update-btn" style="background: rgba(99, 102, 241, 0.1); color: var(--primary); border: 1px solid rgba(99, 102, 241, 0.3);" onclick="AdminHandler.showReceiptModal('${user.id}', '${user.fullName || user.username}', '${user.refId || 'No Ref ID'}')">Receipt</button>
                         <button class="btn-premium update-btn" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2);" onclick="AdminHandler.deleteUser('${user.id}')">Delete</button>
                     </div>
                 </td>
@@ -92,8 +93,11 @@ const AdminHandler = {
         const actionsFooter = document.getElementById('modal-actions-footer');
         if (actionsFooter) actionsFooter.style.display = 'flex';
         
-        // Auto-generate Ref ID
-        document.getElementById('new-username').value = "REF" + new Date().getTime().toString().slice(-6) + Math.floor(Math.random() * 10);
+        // Auto-generate a clean Ref ID: REF + 6 random digits
+        const refId = "REF" + Math.floor(100000 + Math.random() * 900000);
+        document.getElementById('new-username').value = refId;
+        document.getElementById('create-btn').disabled = false;
+        document.getElementById('create-btn').textContent = 'Create Account';
     },
 
     hideModal: function() {
@@ -224,11 +228,12 @@ const AdminHandler = {
                 },
                 credentials: 'include',
                 body: JSON.stringify({
-                    username,
+                    username: mobile, // Storing mobile in username field
                     password,
                     fullName: fullname,
                     email,
-                    billAmount: bill
+                    billAmount: bill,
+                    refId: username   // Storing Ref ID in new ref_id field
                 })
             });
 
@@ -241,12 +246,14 @@ const AdminHandler = {
 
             // Show Success
             document.getElementById('res-id').textContent = data.credentials.username;
+            document.getElementById('res-ref-id').textContent = data.user.refId;
             document.getElementById('res-pw').textContent = data.credentials.password;
             
             // Store globally temporaily for the "Enter Receipt" button
             window._lastCreatedUser = {
                 id: data.user.id,
-                username: data.credentials.username,
+                username: data.user.username,
+                refId: data.user.refId,
                 fullName: fullname
             };
 
@@ -273,7 +280,7 @@ const AdminHandler = {
         this.showReceiptModal(
             window._lastCreatedUser.id, 
             window._lastCreatedUser.fullName, 
-            window._lastCreatedUser.username
+            window._lastCreatedUser.refId
         );
     },
 

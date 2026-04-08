@@ -1,0 +1,28 @@
+# Billing Dashboard | Zero & One
+
+[Zero & One](https://zeroandonetech.web.app/index.html)
+Current Balance
+
+## ₹0.00
+Last Updated: --
+
+### Payment Methods
+
+#### Cashfree PG
+Card, NetBanking, Wallet & UPI
+
+#### Direct UPI
+Instant verification via any UPI app
+
+#### QR Code
+Scan and pay securely
+
+### UPI Payment
+Pay to:
+Tap to open generic UPI intent (Mobile only)
+
+### Scan QR Code
+Scan with any UPI app to pay
+
+### Payment Sent?
+Click below to notify admin for verification.

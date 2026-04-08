@@ -30,7 +30,54 @@ body {
   font-family: var(--font-body);
   line-height: 1.6;
   overflow-x: hidden;
+  cursor: none;
 }
+
+/* =========================================================================
+   1M+ AURA CORE (Aurora Shader & Torch Mask)
+   ========================================================================= */
+#aurora-canvas {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: -2; pointer-events: none;
+  -webkit-mask-image: radial-gradient(1400px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 30%, transparent 100%);
+  mask-image: radial-gradient(1400px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 30%, transparent 100%);
+}
+
+.torch-cursor {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 60px 20px rgba(255, 255, 255, 0.6), 0 0 120px 40px rgba(255, 255, 255, 0.3);
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s, background 0.3s;
+}
+
+.noise-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none; z-index: 9998; opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  animation: noiseScramble 0.3s steps(2) infinite;
+}
+@keyframes noiseScramble { 0% { transform: translate(0,0) } 50% { transform: translate(10px,10px) } 100% { transform: translate(-10px,-10px) } }
+
+/* =========================================================================
+   LUXURY FADE UP SCROLL ANIMATIONS
+   ========================================================================= */
+.fade-up-element {
+  opacity: 0;
+  transform: translateY(80px) scale(0.95);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.fade-up-element.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
 
 a {
   text-decoration: none;
@@ -349,18 +396,38 @@ h3 {
 }
 
 .service-card {
-  background: var(--surface-color);
-  padding: 2rem;
-  border-radius: var(--border-radius);
+  padding: 3rem 2rem;
+  border-radius: 30px;
   text-align: center;
-  transition: var(--transition);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Internal Flashlight Effect inside Glass Cards */
+.service-card::before, .project-card::before {
+  content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: -1; opacity: 0; transition: opacity 0.5s;
+  background: radial-gradient(
+    1000px circle at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), 
+    rgba(255, 255, 255, 0.15), 
+    transparent 40%
+  );
+}
+
+.service-card:hover::before, .project-card:hover::before {
+  opacity: 1;
 }
 
 .service-card:hover {
+  background: rgba(255, 255, 255, 0.05);
   transform: translateY(-10px);
-  border-color: var(--primary-color);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 30px 80px rgba(255,255,255,0.05);
 }
 
 .icon {
@@ -385,17 +452,20 @@ h3 {
 }
 
 .project-card {
-  background: var(--surface-color);
-  border-radius: var(--border-radius);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-radius: 30px;
   overflow: hidden;
-  transition: var(--transition);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
 }
 
 .project-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  border-color: var(--primary-color);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transform: translateY(-10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 30px 80px rgba(255,255,255,0.05);
 }
 
 .project-image {

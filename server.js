@@ -42,8 +42,6 @@ app.set('trust proxy', 1);
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   'https://zeroone-o0u0.onrender.com',
-  "https://zeroandonetech.web.app",
-  "https://zeroandonetech.firebaseapp.com",
   "http://localhost:3000",
 ].filter(Boolean);
 
@@ -345,14 +343,19 @@ app.post('/api/payments/payu/callback', (req, res) => {
 });
 
 
-app.listen(PORT, async () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    
-    // Quick Supabase verification
-    const { data, error } = await supabase.from('profiles').select('id', { count: 'exact', head: true });
-    if (error) {
-        console.error("❌ Warning: Supabase initial check failed:", error.message);
-    } else {
-        console.log("✅ Supabase connection verified successfully!");
-    }
-});
+if (require.main === module) {
+    app.listen(PORT, async () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+        
+        // Quick Supabase verification
+        const { data, error } = await supabase.from('profiles').select('id', { count: 'exact', head: true });
+        if (error) {
+            console.error("❌ Warning: Supabase initial check failed:", error.message);
+        } else {
+            console.log("✅ Supabase connection verified successfully!");
+        }
+    });
+}
+
+// Export for Vercel/Serverless
+module.exports = app;

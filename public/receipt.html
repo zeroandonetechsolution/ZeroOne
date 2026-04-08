@@ -284,6 +284,7 @@
             </div>
         </div>
     </div>
+    <script src="core.js"></script>
     <script>
         function handleBack() {
              // If we have history (e.g. from dashboard), go back. Otherwise go to index.
@@ -295,65 +296,118 @@
              window.location.href = 'payment.html';
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-             // Logic to show Pay button
+        /**
+         * Populate the invoice UI from a receipt data object
+         */
+        function populateReceipt(data) {
+            if (data.receiptId) {
+                document.getElementById('rec-id').textContent = '#' + data.receiptId;
+            }
+
+            const now = new Date();
+            document.getElementById('rec-date').textContent = now.toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+
+            document.getElementById('rec-name').textContent = data.customerName || '';
+            document.getElementById('rec-ref').textContent = data.refId || '';
+
+            const amountNum = parseFloat(data.amount);
+            if (!isNaN(amountNum)) {
+                document.getElementById('rec-amount').textContent = '₹' + amountNum.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            } else {
+                document.getElementById('rec-amount').textContent = '₹' + (data.amount || '0.00');
+            }
+
+            // Update status badge
+            if (amountNum <= 0) {
+                const badge = document.querySelector('.status-badge');
+                if (badge) {
+                    badge.textContent = '✅ No Dues';
+                    badge.style.background = 'rgba(16, 185, 129, 0.15)';
+                    badge.style.color = '#10b981';
+                    badge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                }
+            }
+
+            // Handle breakdown fields
+            const showMoney = (id, val) => {
+                const num = parseFloat(val);
+                if (num > 0) {
+                    document.getElementById('row-' + id).style.display = 'flex';
+                    document.getElementById('rec-' + id).textContent = '₹' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+            };
+
+            if (data.type === 'website') {
+                showMoney('hosting', data.hosting || 0);
+                showMoney('deployment', data.deployment || 0);
+            }
+            showMoney('work', data.work || 0);
+            showMoney('service', data.service || 0);
+            showMoney('gst', data.gst || 0);
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
              const params = new URLSearchParams(window.location.search);
-             if (!window.location.href.includes('admin') && params.has('customer')) {
+             const isCustomerView = params.has('customer');
+
+             // Logic to show Pay button for customer view
+             if (!window.location.href.includes('admin') && isCustomerView) {
                  document.getElementById('pay-now-btn').style.display = 'block';
              }
 
-            let dataStr = localStorage.getItem('current_receipt');
-            
-            // Priority: URL Param Data (for sharing)
-            if (params.has('data')) {
-                try {
-                    dataStr = decodeURIComponent(atob(params.get('data')));
-                } catch(e) {
-                    console.error("Invalid URL data format");
-                }
-            }
-            
-            if (dataStr) {
-                try {
-                    const data = JSON.parse(dataStr);
-                    document.getElementById('rec-id').textContent = '#' + data.receiptId;
-                    
-                    const now = new Date();
-                    document.getElementById('rec-date').textContent = now.toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
-                    
-                    document.getElementById('rec-name').textContent = data.customerName;
-                    document.getElementById('rec-ref').textContent = data.refId;
+             // --- Priority 1: URL `data` param (shared link from admin) ---
+             if (params.has('data')) {
+                 try {
+                     const dataStr = decodeURIComponent(atob(params.get('data')));
+                     const data = JSON.parse(dataStr);
+                     populateReceipt(data);
+                     // Cache locally for future access
+                     localStorage.setItem('current_receipt', JSON.stringify(data));
+                     return; // Done
+                 } catch(e) {
+                     console.error("Invalid URL data format", e);
+                 }
+             }
 
-                    // Save to local storage for persistent access if it came from URL
-                    if (params.has('data')) {
-                        localStorage.setItem('current_receipt', JSON.stringify(data));
-                    }
-                    
-                    const amountNum = parseFloat(data.amount);
-                    if (!isNaN(amountNum)) {
-                        document.getElementById('rec-amount').textContent = '₹' + amountNum.toLocaleString('en-IN') + '.00';
+             // --- Priority 2: localStorage (admin-generated receipt) ---
+             const cachedStr = localStorage.getItem('current_receipt');
+             if (cachedStr) {
+                 try {
+                     const data = JSON.parse(cachedStr);
+                     populateReceipt(data);
+                     return; // Done
+                 } catch(e) {
+                     console.error("Error parsing cached receipt", e);
+                 }
+             }
+
+            // --- Priority 3: Fetch from API (customer viewing their own invoice) ---
+            if (isCustomerView) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/users/me`, {
+                        credentials: 'include'
+                    });
+
+                    if (response.ok) {
+                        const userData = await response.json();
+                        
+                        // Build a receipt object from user's account data
+                        const now = new Date();
+                        const dateStr = now.toISOString().replace(/[-:T.]/g, '').substring(0, 8);
+                        const receiptData = {
+                            customerName: userData.fullName || userData.username,
+                            refId: userData.refId || userData.username,
+                            receiptId: 'RC-' + dateStr + '-001',
+                            amount: userData.billAmount || 0,
+                            type: 'general'
+                        };
+
+                        populateReceipt(receiptData);
                     } else {
-                        document.getElementById('rec-amount').textContent = '₹' + data.amount;
+                        console.error("Could not fetch user data for invoice");
                     }
-
-                    // Handle breakdown fields
-                    const showMoney = (id, val) => {
-                        const num = parseFloat(val);
-                        if (num > 0) {
-                            document.getElementById('row-' + id).style.display = 'flex';
-                            document.getElementById('rec-' + id).textContent = '₹' + num.toLocaleString('en-IN') + '.00';
-                        }
-                    };
-
-                    if (data.type === 'website') {
-                        showMoney('hosting', data.hosting || 0);
-                        showMoney('deployment', data.deployment || 0);
-                    }
-                    showMoney('work', data.work || 0);
-                    showMoney('service', data.service || 0);
-                    showMoney('gst', data.gst || 0);
-                } catch(e) {
-                    console.error("Error parsing receipt data", e);
+                } catch (e) {
+                    console.error("Error fetching user data for invoice", e);
                 }
             }
         });

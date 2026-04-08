@@ -1,14 +1,13 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Billing Dashboard | Zero & One</title>
     <link rel="icon" href="assets/images/zero-and-one-logo.jpeg" type="image/jpeg">
-    <link rel="stylesheet" href="theme.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <!-- Cashfree SDK -->
     <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
     <style>
@@ -23,7 +22,9 @@
         .status-paid { background: rgba(16, 185, 129, 0.1); color: #10b981; }
     </style>
 </head>
-<body>
+<body class="payment-dashboard">
+    <!-- 1M+ Aura GPU Shader -->
+    <canvas id="aurora-canvas"></canvas>
     <header style="padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;">
         <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
             <img src="assets/images/zero-and-one-logo.jpeg" alt="Logo" style="width: 40px; border-radius: 50%;">
@@ -126,6 +127,7 @@
     </style>
 
     <script src="core.js"></script>
+    <script src="script.js"></script>
     <script src="payment-handler.js"></script>
 
     <script>

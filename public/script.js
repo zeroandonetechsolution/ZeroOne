@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- LENIS SMOOTH SCROLL ---
   if (typeof Lenis !== 'undefined') {
-    const lenis = new Lenis({
+    window.lenis = new Lenis({
       duration: 2.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       direction: 'vertical',
@@ -58,65 +58,16 @@ document.addEventListener("DOMContentLoaded", () => {
       mouseMultiplier: 0.8
     });
     function raf(time) {
-      lenis.raf(time);
+      window.lenis.raf(time);
       requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
   }
 
-  // --- LUXURY TORCH CURSOR & MOUSE TRACKING ---
-  const torchCursor = document.getElementById('torch-cursor');
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
-  let torchX = mouseX, torchY = mouseY;
-
+  // --- MOUSE TRACKING FOR SHADER ---
   window.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    document.body.style.setProperty("--mouse-x", `${mouseX}px`);
-    document.body.style.setProperty("--mouse-y", `${mouseY}px`);
-  });
-
-  function animateTorch() {
-    torchX += (mouseX - torchX) * 0.15;
-    torchY += (mouseY - torchY) * 0.15;
-    if (torchCursor) {
-      torchCursor.style.left = `${torchX}px`;
-      torchCursor.style.top = `${torchY}px`;
-    }
-    requestAnimationFrame(animateTorch);
-  }
-  animateTorch();
-
-  // Hover states for the torch (expanding it)
-  document.querySelectorAll('a, button, .btn, .service-card, .project-card, input, textarea, .nav-link').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      if(torchCursor) {
-        torchCursor.style.width = '80px';
-        torchCursor.style.height = '80px';
-        torchCursor.style.background = 'rgba(255, 255, 255, 0.2)';
-        torchCursor.style.border = '1px solid rgba(255, 255, 255, 0.6)';
-        torchCursor.style.backdropFilter = 'blur(8px)';
-      }
-    });
-    el.addEventListener('mouseleave', () => {
-      if(torchCursor) {
-        torchCursor.style.width = '30px';
-        torchCursor.style.height = '30px';
-        torchCursor.style.background = 'rgba(255, 255, 255, 1)';
-        torchCursor.style.border = 'none';
-        torchCursor.style.backdropFilter = 'none';
-      }
-    });
-  });
-
-  // Internal Flashlight mapping for Glass Cards
-  document.querySelectorAll('.service-card, .project-card').forEach((card) => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      card.style.setProperty("--card-mouse-x", `${e.clientX - rect.left}px`);
-      card.style.setProperty("--card-mouse-y", `${e.clientY - rect.top}px`);
-    });
+    document.body.style.setProperty("--mouse-x", `${e.clientX}px`);
+    document.body.style.setProperty("--mouse-y", `${e.clientY}px`);
   });
 
   // --- RAW WEBGL AURORA SHADER ---

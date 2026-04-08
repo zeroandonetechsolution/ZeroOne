@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Login | Zero & One</title>
     <link rel="icon" href="assets/images/zero-and-one-logo.jpeg" type="image/jpeg">
-    <link rel="stylesheet" href="theme.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <style>
         .submit-btn { width: 100%; background: var(--primary); color: #fff; margin-top: 20px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
         .auth-header { text-align: center; margin-bottom: 30px; }
@@ -16,6 +14,8 @@
     </style>
 </head>
 <body class="auth-page">
+    <!-- 1M+ Aura GPU Shader -->
+    <canvas id="aurora-canvas"></canvas>
     <div class="bg-glow"></div>
     <div class="auth-container">
         <div class="auth-card glass-panel">
@@ -43,6 +43,7 @@
     </div>
 
     <script src="core.js"></script>
+    <script src="script.js"></script>
     <script src="auth-handler.js"></script>
 
     <script>

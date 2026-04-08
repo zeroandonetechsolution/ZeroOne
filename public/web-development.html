@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Development Plans - Zero & One Tech Solutions</title>
+    <link rel="icon" href="assets/images/zero-and-one-logo.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Smooth Scroll: Lenis -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+</head>
+<body class="individual-page">
+    <!-- 1M+ Aura GPU Shader -->
+    <canvas id="aurora-canvas"></canvas>
+
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/zero-and-one-logo.jpeg" alt="Zero & One Tech Solutions Logo" class="logo-img">
+                Zero & One Tech Solutions Pvt Ltd<span class="highlight">.</span>
+            </a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="index.html#home" class="nav-link">Home</a></li>
+                    <li><a href="index.html#services" class="nav-link">Services</a></li>
+                    <li><a href="index.html#portfolio" class="nav-link">Works</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <section class="section service-details">
+            <div class="container">
+                <div class="page-header">
+                    <a href="index.html#services" class="back-link">← Back to Services</a>
+                    <h1 class="hero-title">Web <span class="gradient-text">Development</span></h1>
+                    <p class="hero-subtitle">Scale your business with our tailored subscription plans.</p>
+                </div>
+
+                <div class="plans-tabs-container">
+                    <div class="modal-tabs">
+                        <button class="tab-btn active" onclick="Page.switchTab('plans')">Pricing Plans</button>
+                        <button class="tab-btn" onclick="Page.switchTab('developer')">Lead Developer</button>
+                    </div>
+
+                    <div id="plans-tab" class="tab-content active">
+                        <div class="plans-grid">
+                            <!-- Starter Plan -->
+                            <div class="plan-card">
+                                <div class="plan-badge">Most Popular</div>
+                                <div class="plan-header">
+                                    <span class="plan-icon">✦</span>
+                                    <h3>Starter</h3>
+                                    <div class="plan-price">
+                                        <span class="currency">₹</span>
+                                        <span class="amount">2,999</span>
+                                        <span class="period">/year</span>
+                                    </div>
+                                    <p class="savings">Was ₹4,999/yr • Save ₹2,000/yr</p>
+                                </div>
+                                <ul class="plan-features">
+                                    <li>✦ 1 website (landing page or portfolio)</li>
+                                    <li>✦ 2 content updates/month</li>
+                                    <li>✦ Basic SEO setup</li>
+                                    <li>✦ WhatsApp support</li>
+                                    <li>✦ Monthly performance report</li>
+                                    <li>✦ No custom dev features</li>
+                                </ul>
+                                <a href="index.html#contact" class="btn btn-primary plan-btn">Get Started</a>
+                            </div>
+
+                            <!-- Growth Plan -->
+                            <div class="plan-card recommended">
+                                <div class="plan-badge">Best for Startups ↗</div>
+                                <div class="plan-header">
+                                    <span class="plan-icon">🚀</span>
+                                    <h3>Growth</h3>
+                                    <div class="plan-price">
+                                        <span class="currency">₹</span>
+                                        <span class="amount">7,999</span>
+                                        <span class="period">/year</span>
+                                    </div>
+                                    <p class="savings">Was ₹12,999/yr • Save ₹5,000/yr</p>
+                                </div>
+                                <ul class="plan-features">
+                                    <li>✦ Up to 20 hrs dev + design/mo</li>
+                                    <li>✦ Bug fixes + unlimited minor updates</li>
+                                    <li>✦ AI chatbot integration</li>
+                                    <li>✦ Priority support (24h response)</li>
+                                    <li>✦ Bi-weekly strategy call</li>
+                                    <li>✦ 1 free logo/branding refresh/yr</li>
+                                </ul>
+                                <a href="index.html#contact" class="btn btn-primary plan-btn">Choose Growth</a>
+                            </div>
+
+                            <!-- Scale Plan -->
+                            <div class="plan-card">
+                                <div class="plan-badge">Enterprise Ready</div>
+                                <div class="plan-header">
+                                    <span class="plan-icon">⚡</span>
+                                    <h3>Scale</h3>
+                                    <div class="plan-price">
+                                        <span class="currency">₹</span>
+                                        <span class="amount">14,999</span>
+                                        <span class="period">/year</span>
+                                    </div>
+                                    <p class="savings">Was ₹24,999/yr • Save ₹10,000/yr</p>
+                                </div>
+                                <ul class="plan-features">
+                                    <li>✦ 40+ hrs full-stack dev/mo</li>
+                                    <li>✦ Mobile app support</li>
+                                    <li>✦ Cloud + DevOps included</li>
+                                    <li>✦ Dedicated Slack channel</li>
+                                    <li>✦ Weekly strategy call</li>
+                                    <li>✦ Full branding kit included</li>
+                                </ul>
+                                <a href="index.html#contact" class="btn btn-primary plan-btn">Scale Up</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="developer-tab" class="tab-content">
+                        <div class="developer-profile">
+                            <div class="dev-image">
+                                <img src="assets/images/jega%20CEO.png" alt="Jegatheeshwar S">
+                            </div>
+                            <div class="dev-info">
+                                <h2>Jegatheeshwar S</h2>
+                                <h3 class="gradient-text">Founder, CEO & Lead Full Stack Developer</h3>
+                                <p>Jegatheeshwar is a versatile technical leader specializes in architecting high-performance digital products. With deep expertise spanning across full-stack development, custom software engineering, and strategic tech consulting, he ensures every project at Zero & One Tech Solutions is built on a foundation of technical excellence and intuitive design. His human-centric approach to UI/UX ensures that complex solutions remain accessible and engaging for all users.</p>
+                                <div class="dev-stats">
+                                    <div class="dev-stat">
+                                        <strong>5+</strong>
+                                        <span>Years Experience</span>
+                                    </div>
+                                    <div class="dev-stat">
+                                        <strong>50+</strong>
+                                        <span>Projects Lead</span>
+                                    </div>
+                                </div>
+                                <div class="dev-skills">
+                                    <span class="skill-tag">Web Development</span>
+                                    <span class="skill-tag">Software Development</span>
+                                    <span class="skill-tag">UI/UX Designing</span>
+                                    <span class="skill-tag">Tech Consulting</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <p>&copy; 2026 Zero & One Tech Solutions Pvt. Ltd. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://x.com/ZeroOnePvtLtd">Twitter</a>
+                <a href="https://www.linkedin.com/in/zero-one-3a55913ab/">LinkedIn</a>
+                <a href="https://www.instagram.com/zero_one_tech_solutions?igsh=YnF0dzUwenR6bXV2">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="core.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Specific page logic
+        window.Page = {
+            switchTab: function(tabName) {
+                const buttons = document.querySelectorAll('.tab-btn');
+                buttons.forEach(btn => btn.classList.remove('active'));
+                const contents = document.querySelectorAll('.tab-content');
+                contents.forEach(content => content.classList.remove('active'));
+                if (tabName === 'plans') {
+                    document.querySelector('.tab-btn[onclick*="plans"]').classList.add('active');
+                    document.getElementById('plans-tab').classList.add('active');
+                } else {
+                    document.querySelector('.tab-btn[onclick*="developer"]').classList.add('active');
+                    document.getElementById('developer-tab').classList.add('active');
+                }
+            }
+        };
+    </script>
+</body>
+</html>

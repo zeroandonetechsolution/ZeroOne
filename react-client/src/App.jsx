@@ -8,7 +8,7 @@ import {
   useScroll
 } from 'framer-motion';
 import Lenis from '@studio-freight/lenis';
-import { ArrowRight, Code, Layout, Smartphone, Database } from 'lucide-react';
+import { ArrowRight, Code, Layout, Smartphone, Database, ShieldCheck, Cloud } from 'lucide-react';
 import ShaderCanvas from './ShaderCanvas';
 import './App.css';
 
@@ -104,20 +104,32 @@ export default function App() {
         <ShaderCanvas />
       </div>
 
-      {/* Elegant Torch Core Cursor (Massive Light) */}
+      {/* Elegant Torch Core Cursor (Matching Static Site) */}
       <motion.div
         animate={cursorState}
         variants={{
-          default: { width: 30, height: 30, x: 0, y: 0, borderRadius: '50%', background: 'rgba(255, 255, 255, 1)', boxShadow: '0 0 60px 20px rgba(255, 255, 255, 0.6), 0 0 120px 40px rgba(255, 255, 255, 0.3)' },
-          hover: { width: 80, height: 80, x: -25, y: -25, borderRadius: '50%', background: 'rgba(255, 255, 255, 0.2)', border: '1px solid rgba(255,255,255,0.6)', backdropFilter: 'blur(8px)', boxShadow: '0 0 80px 30px rgba(255, 255, 255, 0.4)' }
+          default: { width: 45, height: 45, x: 0, y: 0, opacity: 1 },
+          hover: { width: 75, height: 75, x: -15, y: -15, opacity: 1 }
         }}
         transition={{ type: "spring", mass: 0.1, stiffness: 300, damping: 20 }}
         style={{
           translateX: cursorXSpring, translateY: cursorYSpring,
-          position: 'fixed', top: 0, left: 0, borderRadius: '50%',
+          position: 'fixed', top: 0, left: 0,
           pointerEvents: 'none', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          backgroundImage: "url('/assets/images/torch cursor.png')",
+          backgroundSize: 'contain', backgroundRepeat: 'no-repeat',
         }}
-      />
+      >
+        <motion.div
+          animate={cursorState === "hover" ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+          style={{
+            background: 'rgba(99, 102, 241, 0.8)', color: 'white',
+            padding: '4px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: 800, letterSpacing: '1px'
+          }}
+        >
+          VIEW
+        </motion.div>
+      </motion.div>
 
       <Header setCursorState={setCursorState} />
 
@@ -164,10 +176,12 @@ export default function App() {
 
           <div className="luxury-grid">
             {[
-              { title: "Web Development", icon: Code, desc: "Custom, scalable, and secure beautifully crafted systems." },
-              { title: "UI/UX Design", icon: Layout, desc: "Intuitive, glass-like visuals that provide exceptional serenity." },
-              { title: "Tech Solutions", icon: Database, desc: "End-to-end technology solutions and expert consulting services." },
-              { title: "Mobile Apps", icon: Smartphone, desc: "Responsive and native applications acting as fluid extensions of joy." },
+              { title: "Full-Stack Dev", icon: Code, desc: "High-performance, scalable web ecosystems built with modern stacks." },
+              { title: "Software Dev", icon: Database, desc: "Custom software solutions engineered for complex business logic." },
+              { title: "UI/UX Design", icon: Layout, desc: "Stunning, human-centric interfaces that provide exceptional experiences." },
+              { title: "Ethical Hacking", icon: ShieldCheck, desc: "Advanced security auditing and pentesting for zero-vulnerability systems." },
+              { title: "Cloud Architecture", icon: Cloud, desc: "Reliable, distributed cloud infrastructure for global scale." },
+              { title: "Tech Consulting", icon: Smartphone, desc: "Elite strategic technology guidance for modern digital growth." },
             ].map((item, i) => (
               <motion.div 
                 key={i}

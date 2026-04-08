@@ -4,15 +4,29 @@
 
 body {
   margin: 0; 
-  background-color: #05050a; /* Very dark blue/black, not pure pitch black */
+  background-color: #020205; /* Deeper midnight background */
   color: #ffffff;
   font-family: "Outfit", sans-serif; 
   overflow-x: hidden; 
-  cursor: none;
+}
+
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  a, button { 
+    cursor: none; 
+  }
+}
+
+@media (pointer: coarse) {
+  body, a, button {
+    cursor: auto !important;
+  }
 }
 
 ::-webkit-scrollbar { width: 0px; }
-a, button { cursor: none; text-decoration: none; color: inherit; }
+a, button { text-decoration: none; color: inherit; }
 
 /* Subtle Grain */
 .noise-overlay {
@@ -60,10 +74,11 @@ a, button { cursor: none; text-decoration: none; color: inherit; }
 .massive-title {
   font-size: clamp(3rem, 8vw, 6rem); font-weight: 600;
   line-height: 1.1; letter-spacing: -2px; max-width: 1000px;
+  text-shadow: 0 20px 40px rgba(0,0,0,0.5); /* Boost visibility */
 }
 .hero-subtitle {
   font-size: clamp(1rem, 1.5vw, 1.2rem); max-width: 600px; margin: 30px 0 50px 0; line-height: 1.6;
-  color: rgba(255,255,255,0.6); font-weight: 300;
+  color: rgba(255,255,255,0.9); font-weight: 300; /* Increased opacity */
 }
 .primary-btn {
   background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);

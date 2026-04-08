@@ -1,7 +1,74 @@
-/* Global Variables & Reset */
+/* Cursor & Torch Implementation */
+body.demo-active { cursor: none !important; }
+.torch-cursor-img {
+    position: fixed;
+    width: 45px;
+    height: 45px;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    background-image: url('assets/images/torch%20cursor.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+    display: none; /* Hidden by default, shown via media query */
+}
+
+/* Only show on devices with a fine pointer (Desktop/Laptop) */
+@media (pointer: fine) {
+    .torch-cursor-img {
+        display: block;
+    }
+    body {
+        cursor: none !important;
+    }
+}
+
+/* Ensure mobile feels natural */
+@media (pointer: coarse) {
+    body, a, button, .btn, .service-card, .project-card, .nav-link {
+        cursor: auto !important;
+    }
+}
+
+/* Premium Hover State: No Hands */
+.torch-cursor-img.torch-hovering {
+    width: 75px;
+    height: 75px;
+    filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.6));
+}
+
+/* Unique Interaction Indicator (Instead of hand) */
+.torch-cursor-img::after {
+    content: "VIEW";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    color: white;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    background: rgba(99, 102, 241, 0.8);
+    padding: 4px 8px;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+.torch-cursor-img.torch-hovering::after {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+#aurora-canvas.masked {
+  -webkit-mask-image: radial-gradient(400px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 30%, transparent 100%);
+  mask-image: radial-gradient(400px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 30%, transparent 100%);
+}
+
 :root {
-  --bg-color: #0a0a0a;
-  --surface-color: #121212;
+  --bg-color: #030303; /* Deeper black for better contrast */
+  --surface-color: #0a0a0a;
   --primary-color: #6366f1; /* Indigo */
   --secondary-color: #a855f7; /* Purple */
   --accent-color: #ec4899; /* Pink */
@@ -67,10 +134,11 @@ body {
 }
 
 
-a {
+a, button, .btn, .service-card, .project-card, .nav-link, .logo, .footer-links a {
   text-decoration: none;
   color: inherit;
   transition: var(--transition);
+  cursor: none !important; /* Remove the hand icon */
 }
 
 ul {
@@ -90,6 +158,7 @@ h3 {
   font-family: var(--font-heading);
   font-weight: 700;
   line-height: 1.2;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Helps text pop against the shader */
 }
 
 .section-title {
@@ -127,7 +196,7 @@ h3 {
   padding: 0.8rem 2rem;
   border-radius: 50px;
   font-weight: 600;
-  cursor: pointer;
+  cursor: none !important;
   border: none;
 }
 
@@ -276,7 +345,7 @@ h3 {
 .menu-toggle {
   display: none;
   flex-direction: column;
-  cursor: pointer;
+  cursor: none !important;
   gap: 6px;
 }
 
@@ -292,7 +361,7 @@ h3 {
   height: 100vh;
   display: flex;
   align-items: center;
-  padding-top: 80px;
+  padding-top: 65px; 
   position: relative;
   overflow: hidden;
 }
@@ -325,7 +394,8 @@ h3 {
 
 .hero-subtitle {
   font-size: 1.25rem;
-  color: var(--text-muted);
+  color: var(--text-color); /* Brighter for visibility */
+  opacity: 0.8;
   margin-bottom: 2.5rem;
   max-width: 500px;
 }
@@ -387,10 +457,10 @@ h3 {
   padding: 3rem 2rem;
   border-radius: 30px;
   text-align: center;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02); /* More transparent but darker */
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
@@ -416,7 +486,7 @@ h3 {
   transform: translateY(-10px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 30px 80px rgba(255,255,255,0.05);
-  cursor: pointer;
+  cursor: none !important;
 }
 
 .icon {
@@ -743,7 +813,7 @@ h3 {
     font-size: 2rem;
     width: 50px; height: 50px;
     border-radius: 50%;
-    cursor: pointer;
+    cursor: none !important;
     transition: var(--transition);
     display: flex; align-items: center; justify-content: center;
 }
@@ -770,7 +840,7 @@ h3 {
     background: transparent;
     color: var(--text-muted);
     font-weight: 600;
-    cursor: pointer;
+    cursor: none !important;
     transition: var(--transition);
 }
 
@@ -976,4 +1046,13 @@ h3 {
     .modal-content.premium-modal {
         padding: 2rem;
     }
+}
+/* Sub-page Specific Layout */
+.page-content {
+  padding-top: 60px; 
+}
+
+.page-header {
+  margin-bottom: 3rem;
+  /* Left-aligned by default */
 }

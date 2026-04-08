@@ -65,10 +65,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- MOUSE TRACKING FOR SHADER ---
+  const torchImg = document.getElementById('torch-cursor-img');
+  let mX = window.innerWidth / 2, mY = window.innerHeight / 2;
+  let tX = mX, tY = mY;
+
   window.addEventListener('mousemove', (e) => {
-    document.body.style.setProperty("--mouse-x", `${e.clientX}px`);
-    document.body.style.setProperty("--mouse-y", `${e.clientY}px`);
+    mX = e.clientX;
+    mY = e.clientY;
+    document.body.style.setProperty("--mouse-x", `${mX}px`);
+    document.body.style.setProperty("--mouse-y", `${mY}px`);
   });
+
+  // Interaction Hover Logic (Premium UI)
+  const interactiveElements = document.querySelectorAll('a, button, .service-card, .project-card, .nav-link, .logo, .footer-links a');
+  interactiveElements.forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      if (torchImg) torchImg.classList.add('torch-hovering');
+    });
+    el.addEventListener('mouseleave', () => {
+      if (torchImg) torchImg.classList.remove('torch-hovering');
+    });
+  });
+
+  function animateTorch() {
+    if (torchImg) {
+      tX += (mX - tX) * 0.15;
+      tY += (mY - tY) * 0.15;
+      torchImg.style.left = `${tX}px`;
+      torchImg.style.top = `${tY}px`;
+    }
+    requestAnimationFrame(animateTorch);
+  }
+  animateTorch();
 
   // --- RAW WEBGL AURORA SHADER ---
   const canvas = document.getElementById('aurora-canvas');
@@ -110,10 +138,10 @@ document.addEventListener("DOMContentLoaded", () => {
             r.x = fbm( st + 1.0*q + vec2(1.7,9.2)+ 0.05*u_time );
             r.y = fbm( st + 1.0*q + vec2(8.3,2.8)+ 0.05*u_time);
             float f = fbm(st+r);
-            vec3 color = mix(vec3(0.05, 0.05, 0.15), vec3(0.1, 0.3, 0.7), clamp((f*f)*4.0, 0.0, 1.0));
-            color = mix(color, vec3(0.4, 0.1, 0.6), clamp(length(q), 0.0, 1.0));
-            color = mix(color, vec3(0.1, 0.8, 0.8), clamp(length(r.x), 0.0, 1.0));
-            gl_FragColor = vec4(color * (f * 1.5 + 0.2), 1.0);
+            vec3 color = mix(vec3(0.02, 0.02, 0.1), vec3(0.05, 0.2, 0.5), clamp((f*f)*4.0, 0.0, 1.0));
+            color = mix(color, vec3(0.2, 0.05, 0.4), clamp(length(q), 0.0, 1.0));
+            color = mix(color, vec3(0.05, 0.4, 0.4), clamp(length(r.x), 0.0, 1.0));
+            gl_FragColor = vec4(color * (f * 1.0 + 0.1), 1.0);
         }
       `;
       function createShader(gl, type, source) {

@@ -101,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- RAW WEBGL AURORA SHADER ---
   const canvas = document.getElementById('aurora-canvas');
   if (canvas) {
+    canvas.classList.add('masked');
     const gl = canvas.getContext('webgl');
     if (gl) {
       const vsSource = `
@@ -138,10 +139,10 @@ document.addEventListener("DOMContentLoaded", () => {
             r.x = fbm( st + 1.0*q + vec2(1.7,9.2)+ 0.05*u_time );
             r.y = fbm( st + 1.0*q + vec2(8.3,2.8)+ 0.05*u_time);
             float f = fbm(st+r);
-            vec3 color = mix(vec3(0.02, 0.02, 0.1), vec3(0.05, 0.2, 0.5), clamp((f*f)*4.0, 0.0, 1.0));
-            color = mix(color, vec3(0.2, 0.05, 0.4), clamp(length(q), 0.0, 1.0));
-            color = mix(color, vec3(0.05, 0.4, 0.4), clamp(length(r.x), 0.0, 1.0));
-            gl_FragColor = vec4(color * (f * 1.0 + 0.1), 1.0);
+            vec3 color = mix(vec3(0.05, 0.05, 0.2), vec3(0.1, 0.4, 0.9), clamp((f*f)*4.0, 0.0, 1.0));
+            color = mix(color, vec3(0.4, 0.1, 0.7), clamp(length(q), 0.0, 1.0));
+            color = mix(color, vec3(0.1, 0.7, 0.7), clamp(length(r.x), 0.0, 1.0));
+            gl_FragColor = vec4(color * (f * 2.5 + 0.4), 1.0);
         }
       `;
       function createShader(gl, type, source) {

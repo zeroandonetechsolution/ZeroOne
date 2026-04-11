@@ -10,6 +10,7 @@ body.demo-active { cursor: none !important; }
     background-image: url('assets/images/torch%20cursor.png');
     background-size: contain;
     background-repeat: no-repeat;
+    filter: drop-shadow(0 0 30px rgba(99, 102, 241, 1)) drop-shadow(0 0 60px rgba(168, 85, 247, 0.6)); /* Massive electric glow */
     transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
     display: none; /* Hidden by default, shown via media query */
 }
@@ -33,9 +34,9 @@ body.demo-active { cursor: none !important; }
 
 /* Premium Hover State: No Hands */
 .torch-cursor-img.torch-hovering {
-    width: 75px;
-    height: 75px;
-    filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.6));
+    width: 60px;
+    height: 60px;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 40px rgba(99, 102, 241, 0.8)); /* Toned down hover glow */
 }
 
 /* Unique Interaction Indicator (Instead of hand) */
@@ -62,8 +63,10 @@ body.demo-active { cursor: none !important; }
 }
 
 #aurora-canvas.masked {
-  -webkit-mask-image: radial-gradient(400px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 30%, transparent 100%);
-  mask-image: radial-gradient(400px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 30%, transparent 100%);
+  /* This creates a very dark background (0.05 opacity) for readability, with a bright spotlight (1.0) at the cursor */
+  -webkit-mask-image: radial-gradient(400px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.05) 100%);
+  mask-image: radial-gradient(400px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.05) 100%);
+  opacity: 1;
 }
 
 :root {
@@ -79,6 +82,7 @@ body.demo-active { cursor: none !important; }
   --max-width: 1200px;
   --border-radius: 12px;
   --transition: all 0.3s ease;
+  --torch-size: 320px;
 }
 
 * {
@@ -1056,3 +1060,18 @@ h3 {
   margin-bottom: 3rem;
   /* Left-aligned by default */
 }
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.back-link:hover {
+    color: var(--primary-color);
+    transform: translateX(-5px);
+}
+

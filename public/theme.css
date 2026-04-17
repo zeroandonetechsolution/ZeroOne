@@ -15,7 +15,7 @@
     --border: rgba(255, 255, 255, 0.1);
     
     /* Effects */
-    --glass: blur(16px);
+    --glass: blur(40px);
     --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -71,32 +71,42 @@ body {
 .auth-page {
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 20px;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
     background: var(--bg-dark);
 }
 
 .auth-card {
     width: 100%;
-    max-width: 440px;
-    padding: 48px;
+    max-width: 600px;
+    padding: 60px;
     z-index: 10;
 }
 
 .input-group {
-    margin-bottom: 24px;
+    margin-bottom: 32px;
 }
 
 .input-group label {
     display: block;
     margin-bottom: 10px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #a1a1aa;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f3f4f6;
     margin-left: 4px;
+}
+
+/* Fix browser yellow autofill */
+.auth-input:-webkit-autofill,
+.auth-input:-webkit-autofill:hover, 
+.auth-input:-webkit-autofill:focus, 
+.auth-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #1a1a1e inset !important;
+    -webkit-text-fill-color: white !important;
 }
 
 .auth-input {

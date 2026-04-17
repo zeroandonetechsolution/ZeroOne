@@ -29,9 +29,31 @@
                 <ul class="nav-list">
                     <li><a href="index.html#home" class="nav-link">Home</a></li>
                     <li><a href="index.html#services" class="nav-link">Services</a></li>
-                    <li><a href="index.html#portfolio" class="nav-link">Works</a></li>
+                    <!-- <li><a href="index.html#portfolio" class="nav-link">Works</a></li> -->
+                    <li><a href="transactions.html" class="nav-link">History</a></li>
                     <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                    
+                    <li class="nav-item dropdown" id="login-nav-item">
+                        <a href="javascript:void(0)" class="nav-link dropdown-toggle" id="login-btn">Login <span class="arrow">▾</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="user-login.html" class="dropdown-link">User Login</a></li>
+                            <li><a href="admin-login.html" class="dropdown-link">Admin Login</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li id="admin-nav-item" style="display: none;"><a href="admin-dashboard.html" class="nav-link">Admin Dashboard</a></li>
+                    <li id="user-dashboard-nav-item" style="display: none;"><a href="payment.html" class="nav-link">Dashboard</a></li>
+                    
+                    <li id="user-nav-item" style="display: none; align-items: center; gap: 15px;">
+                        <span id="user-name-display" class="nav-link" style="color: var(--primary); font-weight: 600;"></span>
+                        <button id="logout-btn" class="btn-premium" style="background: var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); padding: 8px 16px; font-size: 0.85rem;" onclick="Core.logout()">Logout</button>
+                    </li>
                 </ul>
+                <div class="menu-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
             </nav>
         </div>
     </header>
@@ -58,14 +80,13 @@
                                 <div class="plan-badge">STARTER</div>
                                 <div class="plan-header">
                                     <span class="plan-icon">💡</span>
-                                    <h3>Advisory</h3>
+                                    <h3>Starter</h3>
                                     <div class="plan-price">
-                                        <span class="currency">₹</span>
-                                        <span class="amount">2,999</span>
-                                        <span class="period">/year</span>
+                                        <span class="currency"></span>
+                                        <span class="amount">Free</span>
+                                        <span class="period"></span>
                                     </div>
-                                    <div class="billed-yearly"><del>Was ₹5,999/yr</del></div>
-                                    <p class="savings">Save ₹3,000/yr</p>
+                                    <p class="savings">Always Free • Was ₹2,999/yr</p>
                                 </div>
                                 <ul class="plan-features">
                                     <li>✦ 1 consulting call/month (30 mins)</li>
@@ -75,7 +96,7 @@
                                     <li>✦ Monthly tech tips report</li>
                                     <li>✦ Roadmap guidance (basic)</li>
                                 </ul>
-                                <a href="index.html#contact" class="btn btn-primary plan-btn">Select Plan</a>
+                                <a href="checkout.html?plan=Starter&price=0&service=Tech%20Consulting" class="btn btn-primary plan-btn">Get Started</a>
                             </div>
 
                             <!-- Plan 2 — Strategist -->
@@ -83,14 +104,13 @@
                                 <div class="plan-badge">MOST POPULAR</div>
                                 <div class="plan-header">
                                     <span class="plan-icon">👔</span>
-                                    <h3>Strategist</h3>
+                                    <h3>Growth</h3>
                                     <div class="plan-price">
                                         <span class="currency">₹</span>
-                                        <span class="amount">5,999</span>
+                                        <span class="amount">500</span>
                                         <span class="period">/year</span>
                                     </div>
-                                    <div class="billed-yearly"><del>Was ₹11,999/yr</del></div>
-                                    <p class="savings">Save ₹6,000/yr</p>
+                                    <p class="savings">Was ₹5,999/yr • Save ₹5,499/yr</p>
                                 </div>
                                 <ul class="plan-features">
                                     <li>✦ 2 consulting calls/month (45 mins)</li>
@@ -101,7 +121,7 @@
                                     <li>✦ Priority WhatsApp support</li>
                                     <li>✦ Bi-weekly progress check-in</li>
                                 </ul>
-                                <a href="index.html#contact" class="btn btn-primary plan-btn">Select Plan</a>
+                                <a href="checkout.html?plan=Growth&price=500&service=Tech%20Consulting" class="btn btn-primary plan-btn">Choose Growth</a>
                             </div>
 
                             <!-- Plan 3 — CTO on Demand -->
@@ -109,14 +129,13 @@
                                 <div class="plan-badge">BEST FOR STARTUPS</div>
                                 <div class="plan-header">
                                     <span class="plan-icon">🚀</span>
-                                    <h3>CTO on Demand</h3>
+                                    <h3>Scaler</h3>
                                     <div class="plan-price">
                                         <span class="currency">₹</span>
-                                        <span class="amount">9,999</span>
+                                        <span class="amount">1000</span>
                                         <span class="period">/year</span>
                                     </div>
-                                    <div class="billed-yearly"><del>Was ₹19,999/yr</del></div>
-                                    <p class="savings">Save ₹10,000/yr</p>
+                                    <p class="savings">Was ₹9,999/yr • Save ₹8,999/yr</p>
                                 </div>
                                 <ul class="plan-features">
                                     <li>✦ Weekly consulting call (60 mins)</li>
@@ -129,7 +148,7 @@
                                     <li>✦ Unlimited WhatsApp support</li>
                                     <li>✦ Monthly detailed tech report</li>
                                 </ul>
-                                <a href="index.html#contact" class="btn btn-primary plan-btn">Select Plan</a>
+                                <a href="checkout.html?plan=Scaler&price=1000&service=Tech%20Consulting" class="btn btn-primary plan-btn">Scale Up</a>
                             </div>
                         </div>
                     </div>
@@ -174,6 +193,9 @@
         <div class="container footer-container">
             <p>&copy; 2026 Zero & One Tech Solutions Pvt. Ltd. All rights reserved.</p>
             <div class="social-links">
+                <a href="terms.html">Terms & Conditions</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="refund.html">Refund Policy</a>
                 <a href="https://x.com/jegafounderof01">Twitter</a>
                 <a href="https://www.linkedin.com/in/jegatheeshwar-jegatheeshwar-358787273/">LinkedIn</a>
                 <a href="https://www.instagram.com/jega_officiel/">Instagram</a>

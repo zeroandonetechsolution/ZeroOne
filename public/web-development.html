@@ -29,9 +29,31 @@
                 <ul class="nav-list">
                     <li><a href="index.html#home" class="nav-link">Home</a></li>
                     <li><a href="index.html#services" class="nav-link">Services</a></li>
-                    <li><a href="index.html#portfolio" class="nav-link">Works</a></li>
+                    <!-- <li><a href="index.html#portfolio" class="nav-link">Works</a></li> -->
+                    <li><a href="transactions.html" class="nav-link">History</a></li>
                     <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                    
+                    <li class="nav-item dropdown" id="login-nav-item">
+                        <a href="javascript:void(0)" class="nav-link dropdown-toggle" id="login-btn">Login <span class="arrow">▾</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="user-login.html" class="dropdown-link">User Login</a></li>
+                            <li><a href="admin-login.html" class="dropdown-link">Admin Login</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li id="admin-nav-item" style="display: none;"><a href="admin-dashboard.html" class="nav-link">Admin Dashboard</a></li>
+                    <li id="user-dashboard-nav-item" style="display: none;"><a href="payment.html" class="nav-link">Dashboard</a></li>
+                    
+                    <li id="user-nav-item" style="display: none; align-items: center; gap: 15px;">
+                        <span id="user-name-display" class="nav-link" style="color: var(--primary); font-weight: 600;"></span>
+                        <button id="logout-btn" class="btn-premium" style="background: var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); padding: 8px 16px; font-size: 0.85rem;" onclick="Core.logout()">Logout</button>
+                    </li>
                 </ul>
+                <div class="menu-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
             </nav>
         </div>
     </header>
@@ -61,10 +83,10 @@
                                     <h3>Starter</h3>
                                     <div class="plan-price">
                                         <span class="currency">₹</span>
-                                        <span class="amount">4,499</span>
+                                        <span class="amount">1,999</span>
                                         <span class="period">/year</span>
                                     </div>
-                                    <p class="savings">Was ₹4,999/yr • Save ₹2,000/yr</p>
+                                    <p class="savings">Was ₹4,499/yr • Save ₹2,500/yr</p>
                                 </div>
                                 <ul class="plan-features">
                                     <li>✦ 1 website (landing page or portfolio)</li>
@@ -74,7 +96,7 @@
                                     <li>✦ Monthly performance report</li>
                                     <li>✦ Not include domain & hosting</li>
                                 </ul>
-                                <a href="index.html#contact" class="btn btn-primary plan-btn">Get Started</a>
+                                <a href="checkout.html?plan=Starter&price=1999&service=Web%20Development" class="btn btn-primary plan-btn">Get Started</a>
                             </div>
 
                             <!-- Growth Plan -->
@@ -85,10 +107,10 @@
                                     <h3>Growth</h3>
                                     <div class="plan-price">
                                         <span class="currency">₹</span>
-                                        <span class="amount">7,999</span>
+                                        <span class="amount">2,999</span>
                                         <span class="period">/year</span>
                                     </div>
-                                    <p class="savings">Was ₹12,999/yr • Save ₹5,000/yr</p>
+                                    <p class="savings">Was ₹7,999/yr • Save ₹5,000/yr</p>
                                 </div>
                                 <ul class="plan-features">
                                     <li>✦ Up to 20 hrs dev + design/mo</li>
@@ -99,7 +121,7 @@
                                     <li>✦ 1 free logo/branding refresh/yr</li>
                                     <li>✦ Not include domain & hosting</li>
                                 </ul>
-                                <a href="index.html#contact" class="btn btn-primary plan-btn">Choose Growth</a>
+                                <a href="checkout.html?plan=Growth&price=2999&service=Web%20Development" class="btn btn-primary plan-btn">Choose Growth</a>
                             </div>
 
                             <!-- Scale Plan -->
@@ -107,13 +129,13 @@
                                 <div class="plan-badge">Enterprise Ready</div>
                                 <div class="plan-header">
                                     <span class="plan-icon">⚡</span>
-                                    <h3>Scale</h3>
+                                    <h3>Scaler</h3>
                                     <div class="plan-price">
                                         <span class="currency">₹</span>
-                                        <span class="amount">14,999</span>
+                                        <span class="amount">3,499</span>
                                         <span class="period">/year</span>
                                     </div>
-                                    <p class="savings">Was ₹24,999/yr • Save ₹10,000/yr</p>
+                                    <p class="savings">Was ₹14,999/yr • Save ₹11,500/yr</p>
                                 </div>
                                 <ul class="plan-features">
                                     <li>✦ 40+ hrs full-stack dev/mo</li>
@@ -124,7 +146,7 @@
                                     <li>✦ Full branding kit included</li>
                                     <li>✦ Not include domain & hosting</li>
                                 </ul>
-                                <a href="index.html#contact" class="btn btn-primary plan-btn">Scale Up</a>
+                                <a href="checkout.html?plan=Scaler&price=3499&service=Web%20Development" class="btn btn-primary plan-btn">Scale Up</a>
                             </div>
                         </div>
                     </div>
@@ -168,9 +190,12 @@
         <div class="container footer-container">
             <p>&copy; 2026 Zero & One Tech Solutions Pvt. Ltd. All rights reserved.</p>
             <div class="social-links">
-                <a href="https://x.com/jegafounderof01">Twitter</a>
-                <a href="https://www.linkedin.com/in/jegatheeshwar-jegatheeshwar-358787273/">LinkedIn</a>
-                <a href="https://www.instagram.com/jega_officiel/">Instagram</a>
+                <a href="terms.html">Terms & Conditions</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="refund.html">Refund Policy</a>
+                <a href="https://x.com/ZeroOnePvtLtd">Twitter</a>
+                <a href="https://www.linkedin.com/in/zero-one-3a55913ab/">LinkedIn</a>
+                <a href="https://www.instagram.com/zero_one_tech_solutions?igsh=YnF0dzUwenR6bXV2">Instagram</a>
                 <a href="https://wa.me/919514518197">WhatsApp</a>
             </div>
         </div>

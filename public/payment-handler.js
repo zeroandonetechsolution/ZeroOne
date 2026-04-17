@@ -14,25 +14,92 @@ const PaymentHandler = {
 
     init: async function() {
         try {
-            // Initialize Cashfree SDK (v3)
-            this.cashfree = Cashfree({ mode: "sandbox" }); // Change to "production" for live
-            
-            const userData = await this.getUserData();
-            if (userData) {
-                this.updateBillUI(userData);
+            // Check for order data from checkout page
+            const pendingOrder = localStorage.getItem('pending_order');
+            if (pendingOrder) {
+                const order = JSON.parse(pendingOrder);
+                this.updateOrderUI(order);
+            } else {
+                const userData = await this.getUserData();
+                if (userData) {
+                    this.updateBillUI(userData);
+                }
             }
             
-            // Refresh every 10 seconds
-            setInterval(async () => {
-                const data = await this.getUserData();
-                if (data) this.updateBillUI(data);
-            }, 10000);
-
-            // Initialize UI elements
             this.setupEventListeners();
         } catch (error) {
             console.error("Payment handler init error:", error);
         }
+    },
+
+    updateOrderUI: function(order) {
+        this.currentBillAmount = order.paidAmount;
+        this.pendingOrderData = order; // Save for balance switching
+        
+        const amountEl = document.getElementById('bill-amount');
+        const statusEl = document.getElementById('bill-status');
+        const projectEl = document.getElementById('project-display');
+        const refEl = document.getElementById('ref-display');
+        const balanceSection = document.getElementById('balance-section');
+        const balanceEl = document.getElementById('balance-amount');
+        
+        // Plan Details
+        const planNameEl = document.getElementById('plan-name-display');
+        const serviceTypeEl = document.getElementById('service-type-display');
+        const expiryEl = document.getElementById('expiry-display');
+        const daysLeftEl = document.getElementById('days-left');
+        const renewBtn = document.getElementById('renew-btn');
+
+        if (amountEl) amountEl.textContent = `₹${order.paidAmount.toLocaleString('en-IN')}`;
+        if (projectEl) projectEl.textContent = order.projectName;
+        if (refEl) refEl.textContent = order.refId;
+        
+        if (planNameEl) planNameEl.textContent = order.plan;
+        if (serviceTypeEl) serviceTypeEl.textContent = order.projectType;
+
+        // Mock Expiry: 1 year from timestamp
+        const purchaseDate = new Date(order.timestamp);
+        const expiryDate = new Date(purchaseDate.getTime());
+        expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+        
+        const now = new Date();
+        const diffTime = expiryDate - now;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (expiryEl) expiryEl.textContent = `Expires: ${expiryDate.toLocaleDateString()}`;
+        if (daysLeftEl) daysLeftEl.textContent = `Valid for: ${diffDays} days`;
+        
+        // Show renew button if less than 30 days left (mocking 360 days left for now)
+        if (renewBtn) renewBtn.style.display = 'block';
+
+        if (order.isPartPayment && balanceSection && balanceEl) {
+            balanceSection.style.display = 'block';
+            balanceEl.textContent = `₹${order.balanceAmount.toLocaleString('en-IN')}`;
+        }
+
+        if (statusEl) {
+            statusEl.textContent = order.isPartPayment ? "Advance Pending" : "Payment Pending";
+            statusEl.className = "status-badge status-unpaid";
+        }
+    },
+
+    switchToBalancePayment: function() {
+        if (!this.pendingOrderData || !this.pendingOrderData.balanceAmount) return;
+        
+        this.currentBillAmount = this.pendingOrderData.balanceAmount;
+        const amountEl = document.getElementById('bill-amount');
+        if (amountEl) amountEl.textContent = `₹${this.currentBillAmount.toLocaleString('en-IN')}`;
+        
+        const statusEl = document.getElementById('bill-status');
+        if (statusEl) statusEl.textContent = "Balance Payment";
+        
+        alert("Switched to Remaining Balance Payment.");
+    },
+
+    renewSubscription: function() {
+        const order = this.pendingOrderData;
+        if (!order) return;
+        window.location.href = `checkout.html?plan=${order.plan}&price=${order.totalAmount - 11}&service=${encodeURIComponent(order.projectType)}`;
     },
 
     setupEventListeners: function() {

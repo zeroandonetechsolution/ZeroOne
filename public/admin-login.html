@@ -7,16 +7,20 @@
     <title>Admin Access | Zero & One</title>
     <link rel="icon" href="assets/images/zero-and-one-logo.jpeg" type="image/jpeg">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
     <link rel="stylesheet" href="style.css">
     <style>
+        .auth-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 120px 20px 60px; box-sizing: border-box; }
         .submit-btn { 
             width: 100%; 
-            background: linear-gradient(135deg, var(--admin), var(--admin-dark)); 
+            background: linear-gradient(135deg, #ef4444, #991b1b); 
             color: #fff; 
-            margin-top: 20px; 
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            margin-top: 35px; 
+            padding: 16px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 25px rgba(239, 68, 68, 0.4);
         }
-        .auth-header { text-align: center; margin-bottom: 30px; }
+        .auth-header { text-align: center; margin-bottom: 45px; }
         .error-msg { color: #ef4444; font-size: 0.85rem; margin-top: 15px; display: none; text-align: center; }
         .admin-tag { 
             background: rgba(239, 68, 68, 0.1); color: var(--admin); padding: 4px 12px; 
@@ -30,8 +34,24 @@
     <!-- 1M+ Aura GPU Shader -->
     <canvas id="aurora-canvas" class="masked"></canvas>
     <div class="torch-cursor-img" id="torch-cursor-img"></div>
+
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/zero-and-one-logo.jpeg" alt="Zero & One Tech Solutions Logo" class="logo-img">
+                Zero & One Tech Solutions Pvt Ltd<span class="highlight">.</span>
+            </a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="index.html#home" class="nav-link">Home</a></li>
+                    <li><a href="user-login.html" class="nav-link">User Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
     <div class="bg-glow"></div>
-    <div class="auth-container">
+    <main class="auth-container">
         <div class="auth-card glass-panel">
             <div class="auth-header">
                 <div class="admin-tag">Security Console</div>
@@ -54,7 +74,7 @@
                 <button type="submit" id="submit-btn" class="btn-premium submit-btn">Authenticate</button>
             </form>
         </div>
-    </div>
+    </main>
 
     <script src="core.js"></script>
     <script src="script.js"></script>

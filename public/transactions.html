@@ -7,13 +7,14 @@
     <meta name="description" content="Explore our complete transaction history, successfully delivered projects, and the expert team behind Zero & One Tech Solutions.">
     <link rel="icon" href="assets/images/jega%20CEO.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
     <link rel="stylesheet" href="style.css">
     <style>
         /* ===== PAGE-SPECIFIC VARIABLES ===== */
         :root {
-            --primary: #00f2ff;
-            --secondary: #7000ff;
-            --accent: #ff007a;
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --accent: #ec4899;
             --success: #00ff9d;
             --warning: #ffcc00;
             --info: #007aff;
@@ -749,12 +750,24 @@
     </style>
 </head>
 <body class="transactions-page">
-    <!-- 1M+ Aura GPU Shader -->
-    <canvas id="aurora-canvas" class="masked"></canvas>
-    <div class="torch-cursor-img" id="torch-cursor-img"></div>
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/zero-and-one-logo.jpeg" alt="Zero & One Tech Solutions Logo" class="logo-img">
+                Zero & One <span style="font-weight: 300; opacity: 0.5;">History</span>
+            </a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="index.html#home" class="nav-link">Home</a></li>
+                    <li><a href="index.html#services" class="nav-link">Services</a></li>
+                    <li><a href="transactions.html" class="nav-link">History</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<!-- Back to Home -->
-<a href="index.html" class="back-link" id="back-link">← Back to Home</a>
+    <div class="bg-glow"></div>
 
 <!-- Page Hero -->
 <section class="page-hero">
@@ -909,12 +922,16 @@
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
 
 <!-- Footer -->
-<footer class="page-footer">
-    <p>© 2026 <a href="index.html">Zero &amp; One Tech Solutions Pvt. Ltd.</a> All rights reserved. | Tamil Nadu, India</p>
-    <p style="margin-top: 10px;">
-        <a href="#" id="portfolio-link" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600; border-bottom: 1px dashed var(--primary); padding-bottom: 2px;">View My Personal Portfolio (Sample Link)</a>
-    </p>
-</footer>
+    <footer class="footer">
+        <div class="container footer-container">
+            <p>&copy; 2026 Zero & One Tech Solutions Pvt. Ltd. All rights reserved.</p>
+            <div class="social-links">
+                <a href="terms.html">Terms & Conditions</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="refund.html">Refund Policy</a>
+            </div>
+        </div>
+    </footer>
 
 <script>
 /* ======================================================

@@ -234,9 +234,11 @@ h3 {
   left: 0;
   width: 100%;
   z-index: 1000;
-  background: rgba(10, 10, 10, 0.8);
-  backdrop-filter: blur(10px);
-  padding: 1.5rem 0;
+  background: rgba(3, 3, 3, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .header-container {
@@ -246,18 +248,19 @@ h3 {
 }
 
 .logo {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 700;
   font-family: var(--font-heading);
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
 .logo-img {
-  height: 75px;
+  height: 50px;
   width: auto;
-  border-radius: 50%; /* Circular logo */
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .logo .highlight {
@@ -894,12 +897,29 @@ h3 {
 }
 
 .plan-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 30px;
-    padding: 2.5rem;
+    padding: 3rem 2.5rem;
     position: relative;
-    transition: var(--transition);
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.plan-card::before {
+  content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: -1; opacity: 0; transition: opacity 0.5s;
+  background: radial-gradient(
+    1000px circle at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), 
+    rgba(255, 255, 255, 0.12), 
+    transparent 40%
+  );
+}
+
+.plan-card:hover::before {
+    opacity: 1;
 }
 
 .plan-card:hover {
@@ -940,19 +960,24 @@ h3 {
 }
 
 .plan-price .amount {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
     font-weight: 700;
     line-height: 1;
+    background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .plan-price .currency {
-    font-size: 1.2rem;
-    margin-bottom: 0.4rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+    color: var(--primary-color);
 }
 
 .plan-price .period {
     color: var(--text-muted);
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
 }
 
 .billed-yearly {
@@ -1065,8 +1090,8 @@ h3 {
 }
 
 .page-header {
-  margin-bottom: 3rem;
-  /* Left-aligned by default */
+  margin-bottom: 4rem;
+  text-align: center;
 }
 
 .back-link {

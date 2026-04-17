@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Zero & One Tech Solutions</title>
+    <link rel="icon" href="assets/images/zero-and-one-logo.jpeg" type="image/jpeg">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .checkout-container { max-width: 1000px; margin: 120px auto 60px; padding: 0 20px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; }
+        .checkout-form { padding: 40px; }
+        .order-summary { padding: 40px; position: sticky; top: 120px; height: fit-content; }
+        .form-section { margin-bottom: 35px; }
+        .form-section h3 { font-size: 1.2rem; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .full-width { grid-column: span 2; }
+        
+        .payment-toggle { 
+            display: flex; gap: 15px; margin-top: 20px; 
+            background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .toggle-btn { 
+            flex: 1; padding: 12px; border-radius: 8px; border: 1px solid transparent;
+            background: none; color: #a1a1aa; cursor: pointer; transition: var(--transition);
+            font-weight: 600; font-size: 0.9rem;
+        }
+        .toggle-btn.active { 
+            background: var(--primary); color: #fff; 
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 15px; color: #a1a1aa; }
+        .summary-total { border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px; font-weight: 700; font-size: 1.4rem; color: #fff; }
+        .ref-badge { background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-family: monospace; }
+        
+        @media (max-width: 900px) {
+            .checkout-container { grid-template-columns: 1fr; margin-top: 100px; }
+            .order-summary { order: -1; position: static; }
+        }
+    </style>
+</head>
+<body class="auth-page">
+    <canvas id="aurora-canvas" class="masked"></canvas>
+    <div class="torch-cursor-img" id="torch-cursor-img"></div>
+
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/zero-and-one-logo.jpeg" alt="Logo" class="logo-img">
+                Zero & One <span style="font-weight: 300; opacity: 0.5;">Checkout</span>
+            </a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="index.html#services" class="nav-link">Back to Services</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="bg-glow"></div>
+
+    <main class="checkout-container">
+        <!-- Left: Form -->
+        <div class="checkout-form glass-panel">
+            <div class="form-section">
+                <h3><span class="step">1</span> Client Information</h3>
+                <div class="grid-inputs">
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" id="client-name" class="auth-input" placeholder="e.g. John Doe" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Mobile Number</label>
+                        <input type="tel" id="client-mobile" class="auth-input" placeholder="+91 00000 00000" required>
+                    </div>
+                    <div class="input-group full-width">
+                        <label>Address</label>
+                        <textarea id="client-address" class="auth-input" style="min-height: 100px;" placeholder="Full project delivery address" required></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3><span class="step">2</span> Project Specification</h3>
+                <div class="grid-inputs">
+                    <div class="input-group">
+                        <label>Project Name</label>
+                        <input type="text" id="project-name" class="auth-input" placeholder="e.g. My Portfolio Website" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Project Type</label>
+                        <input type="text" id="project-type" class="auth-input" readonly>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; padding: 12px; background: rgba(99, 102, 241, 0.05); border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.2);">
+                    <p style="font-size: 0.85rem; color: #a1a1aa;">
+                        <span style="color: var(--primary); font-weight: 600;">Account Creation:</span> A client account will be created automatically. Use your <span style="color: #fff;">Mobile Number</span> as Username and <span style="color: #fff;">Full Name</span> as Password to login to your dashboard later.
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3><span class="step">3</span> Payment Schedule</h3>
+                <p style="color: #71717a; font-size: 0.9rem;">Choose how you want to initiate this project.</p>
+                <div class="payment-toggle">
+                    <button class="toggle-btn active" onclick="setPaymentMode('advance')">Pay Advance (1/3)</button>
+                    <button class="toggle-btn" onclick="setPaymentMode('full')">Pay Full Amount</button>
+                </div>
+            </div>
+
+            <button class="btn-premium" style="width: 100%; margin-top: 20px; background: var(--primary);" onclick="processOrder()">Complete Order & Pay</button>
+            <p style="text-align: center; color: #71717a; font-size: 0.8rem; margin-top: 15px;">Secure 256-bit encrypted transaction</p>
+        </div>
+
+        <!-- Right: Summary -->
+        <div class="order-summary glass-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h3 style="margin: 0;">Order Summary</h3>
+                <span class="ref-badge" id="ref-id-display">REF-000000</span>
+            </div>
+            
+            <div class="summary-item">
+                <span>Selected Plan</span>
+                <span id="summary-plan" style="color: #fff; font-weight: 600;">Starter</span>
+            </div>
+            <div class="summary-item">
+                <span>Service Type</span>
+                <span id="summary-service" style="color: #fff;">Web Development</span>
+            </div>
+            <div class="summary-item" style="border-top: 1px solid var(--border); padding-top: 15px; margin-top: 15px;">
+                <span>Plan Price</span>
+                <span id="summary-price" style="color: #fff;">₹0.00</span>
+            </div>
+            <div class="summary-item">
+                <span>Platform Charge</span>
+                <span style="color: var(--primary);">+ ₹11.00</span>
+            </div>
+            
+            <div id="advance-breakdown" style="display: block;">
+                <div class="summary-item">
+                    <span>Advance (1/3)</span>
+                    <span id="summary-advance" style="color: var(--primary); font-weight: 600;">₹0.00</span>
+                </div>
+                <div class="summary-item">
+                    <span>Balance Due</span>
+                    <span id="summary-balance" style="color: #fca5a5;">₹0.00</span>
+                </div>
+            </div>
+
+            <div class="summary-total">
+                <span>Total Payable Now</span>
+                <span id="payable-now">₹0.00</span>
+            </div>
+
+            <div style="margin-top: 25px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 10px; border: 1px dashed var(--border);">
+                <p style="font-size: 0.85rem; color: #71717a; line-height: 1.5;">
+                    <span style="color: var(--primary);">Note:</span> For advance payments, the remaining balance will be due upon project completion and handover.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script src="core.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let currentPrice = 0;
+        let paymentMode = 'advance'; // 'advance' or 'full'
+
+        function generateRefID() {
+            const date = new Date();
+            const year = date.getFullYear().toString().slice(-2);
+            const random = Math.floor(1000 + Math.random() * 9000);
+            const refId = `ZO-${year}${random}`;
+            document.getElementById('ref-id-display').textContent = refId;
+            return refId;
+        }
+
+        function initCheckout() {
+            const params = new URLSearchParams(window.location.search);
+            const plan = params.get('plan') || 'Starter';
+            const price = parseInt(params.get('price')) || 1999;
+            const service = params.get('service') || 'Web Development';
+
+            currentPrice = price;
+            
+            document.getElementById('project-type').value = service;
+            document.getElementById('summary-plan').textContent = plan;
+            document.getElementById('summary-service').textContent = service;
+            document.getElementById('summary-price').textContent = `₹${price.toLocaleString('en-IN')}`;
+            
+            generateRefID();
+            updateBreakdown();
+        }
+
+        function setPaymentMode(mode) {
+            paymentMode = mode;
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase().includes(mode));
+            });
+            
+            document.getElementById('advance-breakdown').style.display = mode === 'advance' ? 'block' : 'none';
+            updateBreakdown();
+        }
+
+        function updateBreakdown() {
+            const advance = Math.ceil(currentPrice / 3);
+            const balance = currentPrice - advance;
+            
+            document.getElementById('summary-advance').textContent = `₹${advance.toLocaleString('en-IN')}`;
+            document.getElementById('summary-balance').textContent = `₹${balance.toLocaleString('en-IN')}`;
+            
+            const payableNow = paymentMode === 'advance' ? (advance + 11) : (currentPrice + 11);
+            document.getElementById('payable-now').textContent = `₹${payableNow.toLocaleString('en-IN')}`;
+        }
+
+        function processOrder() {
+            const name = document.getElementById('client-name').value;
+            const mobile = document.getElementById('client-mobile').value;
+            const address = document.getElementById('client-address').value;
+            const projectName = document.getElementById('project-name').value;
+            const refId = document.getElementById('ref-id-display').textContent;
+
+            if(!name || !mobile || !address || !projectName) {
+                alert('Please fill all required fields');
+                return;
+            }
+
+            const baseAmount = paymentMode === 'advance' ? Math.ceil(currentPrice / 3) : currentPrice;
+            const totalToPay = baseAmount + 11;
+            
+            const orderData = {
+                refId, name, mobile, address, projectName,
+                projectType: document.getElementById('project-type').value,
+                totalAmount: currentPrice + 11,
+                paidAmount: totalToPay,
+                isPartPayment: paymentMode === 'advance',
+                balanceAmount: paymentMode === 'advance' ? (currentPrice - baseAmount) : 0,
+                timestamp: new Date().toISOString()
+            };
+
+            localStorage.setItem('pending_order', JSON.stringify(orderData));
+
+            // Alert for account creation
+            alert(`Project Initialized!\n\nReference ID: ${refId}\n\nYour Account has been created!\nUsername: ${mobile}\nPassword: ${name}\n\nRedirecting to payment...`);
+
+            window.location.href = `payment.html?amount=${totalToPay}&ref=${refId}&name=${encodeURIComponent(name)}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', initCheckout);
+    </script>
+</body>
+</html>

@@ -64,8 +64,25 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(raf);
   }
 
+  // --- ENSURE CORE UI ELEMENTS (Cursor & Canvas) ---
+  function ensureCoreUI() {
+    if (!document.getElementById('aurora-canvas')) {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'aurora-canvas';
+      canvas.className = 'masked';
+      document.body.prepend(canvas);
+    }
+    if (!document.getElementById('torch-cursor-img')) {
+      const torch = document.createElement('div');
+      torch.id = 'torch-cursor-img';
+      torch.className = 'torch-cursor-img';
+      document.body.prepend(torch);
+    }
+  }
+  ensureCoreUI();
+
   // --- MOUSE TRACKING FOR SHADER ---
-  const torchImg = document.getElementById('torch-cursor-img');
+  let torchImg = document.getElementById('torch-cursor-img');
   let mX = window.innerWidth / 2, mY = window.innerHeight / 2;
   let tX = mX, tY = mY;
 
@@ -183,4 +200,70 @@ document.addEventListener("DOMContentLoaded", () => {
       requestAnimationFrame(render);
     }
   }
+
+  // --- FLOATING WIDGETS INJECTION ---
+  async function injectWidgets() {
+    // WhatsApp Floating Button
+    const whatsappBtn = document.createElement('a');
+    whatsappBtn.href = "https://wa.me/919514518197";
+    whatsappBtn.target = "_blank";
+    whatsappBtn.className = "whatsapp-float";
+    whatsappBtn.innerHTML = `<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">`;
+    whatsappBtn.setAttribute('aria-label', 'Chat with us on WhatsApp');
+    
+    // Visitor Counter Float
+    const visitorCounter = document.createElement('div');
+    visitorCounter.className = "visitor-counter-float";
+    
+    // Initial display before loading real data
+    visitorCounter.innerHTML = `
+      <div class="counter-icon-container">
+        <div class="counter-icon"></div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.7;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+      </div>
+      <div>Total Visitors: <span class="counter-value" id="count-display">...</span></div>
+    `;
+    
+    document.body.appendChild(whatsappBtn);
+    document.body.appendChild(visitorCounter);
+
+    // Fetch and Track logic
+    const formatNumber = (num) => {
+        // Indian Number Formatting (e.g. 1,54,236)
+        return new Intl.NumberFormat('en-IN').format(num);
+    };
+
+    try {
+        // Use a session flag to avoid tracking multiple times per session
+        const hasTracked = sessionStorage.getItem('tracked_visit');
+        let endpoint = hasTracked ? '/api/analytics/visitors' : '/api/analytics/track';
+        let method = hasTracked ? 'GET' : 'POST';
+        
+        const response = await fetch(API_BASE_URL + endpoint, { method });
+        if (response.ok) {
+            const data = await response.json();
+            const display = document.getElementById('count-display');
+            if (display) {
+                display.textContent = formatNumber(data.count);
+            }
+            if (!hasTracked) sessionStorage.setItem('tracked_visit', 'true');
+        }
+    } catch (err) {
+        console.warn("Analytics fetch failed, showing frank fallback.");
+        const display = document.getElementById('count-display');
+        if (display) display.textContent = formatNumber(154236);
+    }
+    
+    // Add hover effects for the custom cursor
+    [whatsappBtn, visitorCounter].forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        if (torchImg) torchImg.classList.add('torch-hovering');
+      });
+      el.addEventListener('mouseleave', () => {
+        if (torchImg) torchImg.classList.remove('torch-hovering');
+      });
+    });
+  }
+
+  injectWidgets();
 });

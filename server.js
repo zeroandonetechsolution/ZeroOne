@@ -342,6 +342,55 @@ app.post('/api/payments/payu/callback', (req, res) => {
     res.redirect(`${process.env.FRONTEND_URL}/payment-success.html`);
 });
 
+// ============= ANALYTICS ENDPOINTS =============
+
+/**
+ * Get current visitor count.
+ * Returns a realistic starting number if no data is present in DB.
+ */
+app.get('/api/analytics/visitors', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('site_analytics')
+            .select('value')
+            .eq('key', 'total_visitors')
+            .single();
+
+        if (error || !data) {
+            return res.json({ count: 154236 }); // Frank starting number as requested
+        }
+        res.json({ count: data.value });
+    } catch (err) {
+        res.json({ count: 154236 });
+    }
+});
+
+/**
+ * Track a new visit.
+ * Increments the count in Supabase site_analytics table.
+ */
+app.post('/api/analytics/track', async (req, res) => {
+    try {
+        const { data: current, error: fetchError } = await supabase
+            .from('site_analytics')
+            .select('value')
+            .eq('key', 'total_visitors')
+            .single();
+        
+        let newVal = (current?.value || 154236) + 1;
+        
+        const { error: updateError } = await supabase
+            .from('site_analytics')
+            .upsert({ key: 'total_visitors', value: newVal });
+
+        if (updateError) throw updateError;
+        res.json({ count: newVal });
+    } catch (err) {
+        console.error("Tracking Error:", err);
+        res.status(500).json({ error: "Tracking failed" });
+    }
+});
+
 
 if (require.main === module) {
     app.listen(PORT, async () => {

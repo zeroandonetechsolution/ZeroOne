@@ -123,8 +123,9 @@ export default function App() {
         <motion.div
           animate={cursorState === "hover" ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
           style={{
-            background: 'rgba(99, 102, 241, 0.8)', color: 'white',
-            padding: '4px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: 800, letterSpacing: '1px'
+            background: 'rgba(99, 102, 241, 0.4)', color: 'white',
+            backdropFilter: 'blur(4px)',
+            padding: '3px 6px', borderRadius: '4px', fontSize: '8px', fontWeight: 800, letterSpacing: '1px'
           }}
         >
           VIEW

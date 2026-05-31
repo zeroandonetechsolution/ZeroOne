@@ -1,0 +1,21 @@
+{
+  "name": "Zero & One Tech Solutions",
+  "short_name": "Zero & One",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "assets/images/zero-and-one-logo.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "assets/images/zero-and-one-logo.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ],
+  "description": "Best Web & Software Development in Tiruppur & Coimbatore"
+}

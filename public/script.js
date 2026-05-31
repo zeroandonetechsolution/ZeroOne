@@ -48,6 +48,21 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(el);
   });
 
+  // --- MAP INTERACTION LOGIC ---
+  const mapCard = document.getElementById('interactive-map-card');
+  const mapOverlay = document.getElementById('map-overlay');
+  
+  if (mapCard && mapOverlay) {
+    mapOverlay.addEventListener('click', () => {
+      mapCard.classList.add('active');
+    });
+
+    // Reset map interaction when leaving the area
+    mapCard.addEventListener('mouseleave', () => {
+      mapCard.classList.remove('active');
+    });
+  }
+
   // --- LENIS SMOOTH SCROLL ---
   if (typeof Lenis !== 'undefined') {
     window.lenis = new Lenis({
@@ -156,10 +171,10 @@ document.addEventListener("DOMContentLoaded", () => {
             r.x = fbm( st + 1.0*q + vec2(1.7,9.2)+ 0.05*u_time );
             r.y = fbm( st + 1.0*q + vec2(8.3,2.8)+ 0.05*u_time);
             float f = fbm(st+r);
-            vec3 color = mix(vec3(0.05, 0.05, 0.2), vec3(0.1, 0.4, 0.9), clamp((f*f)*4.0, 0.0, 1.0));
-            color = mix(color, vec3(0.4, 0.1, 0.7), clamp(length(q), 0.0, 1.0));
-            color = mix(color, vec3(0.1, 0.7, 0.7), clamp(length(r.x), 0.0, 1.0));
-            gl_FragColor = vec4(color * (f * 2.5 + 0.4), 1.0);
+            vec3 color = mix(vec3(0.02, 0.02, 0.1), vec3(0.05, 0.2, 0.5), clamp((f*f)*4.0, 0.0, 1.0)); /* Darkened base colors */
+            color = mix(color, vec3(0.2, 0.05, 0.4), clamp(length(q), 0.0, 1.0));
+            color = mix(color, vec3(0.05, 0.4, 0.4), clamp(length(r.x), 0.0, 1.0));
+            gl_FragColor = vec4(color * (f * 1.8 + 0.3), 1.0); /* Reduced brightness multiplier */
         }
       `;
       function createShader(gl, type, source) {

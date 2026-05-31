@@ -42,8 +42,9 @@ a, button { text-decoration: none; color: inherit; }
   top: 0; left: 0; width: 100vw; height: 100vh;
   z-index: -1;
   pointer-events: none;
-  -webkit-mask-image: radial-gradient(1400px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 30%, transparent 100%);
-  mask-image: radial-gradient(1400px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 30%, transparent 100%);
+  /* Increased ambient visibility and larger radius so other contents are visible */
+  -webkit-mask-image: radial-gradient(1200px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.25) 100%);
+  mask-image: radial-gradient(1200px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.25) 100%);
 }
 
 @keyframes noiseScramble {
@@ -122,7 +123,7 @@ a, button { text-decoration: none; color: inherit; }
 
 .card-icon-wrapper { margin-bottom: 30px; color: rgba(255,255,255,0.9); }
 .card-title { font-size: 1.8rem; font-weight: 500; margin-bottom: 15px; }
-.card-desc { font-size: 1.05rem; line-height: 1.6; font-weight: 300; color: rgba(255,255,255,0.6); flex-grow: 1; margin-bottom: 30px; }
+.card-desc { font-size: 1.05rem; line-height: 1.6; font-weight: 300; color: rgba(255,255,255,0.9); flex-grow: 1; margin-bottom: 30px; } /* Increased opacity for better visibility */
 .card-action { font-size: 0.9rem; font-weight: 500; color: #fff; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
 
 /* PORTFOLIO ROW */

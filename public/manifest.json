@@ -7,15 +7,15 @@
   "theme_color": "#6366f1",
   "icons": [
     {
-      "src": "assets/images/zero-and-one-logo.jpeg",
+      "src": "assets/images/ZeroOne BG Less Logo.png",
       "sizes": "192x192",
       "type": "image/jpeg"
     },
     {
-      "src": "assets/images/zero-and-one-logo.jpeg",
+      "src": "assets/images/ZeroOne BG Less Logo.png",
       "sizes": "512x512",
       "type": "image/jpeg"
     }
   ],
-  "description": "Best Web & Software Development in Tiruppur & Coimbatore"
+  "description": "Best Web & Software Development"
 }

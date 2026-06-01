@@ -48,6 +48,149 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(el);
   });
 
+  // --- ZOS AI CHATBOT BRAIN & API LOGIC ---
+  const OPENROUTER_API_KEY = "YOUR_OPENROUTER_API_KEY"; // Replace with your actual key
+  const ZOS_SYSTEM_PROMPT = `You are ZOS, the highly advanced AI assistant for Zero & One Tech Solutions.
+    Your personality is:
+    - Highly professional, intelligent, and helpful (similar to ChatGPT).
+    - An expert in software engineering, web development, and digital transformation.
+    - Concise yet thorough.
+    
+    Company Context:
+    - Name: Zero & One Tech Solutions Pvt Ltd.
+    - Services: High-performance Web Development (React, Next.js), Custom Enterprise Software (ERP, CRM), Android Apps, and Professional UI/UX Design.
+    - Pricing: Premium subscription-based plans start at ₹2,499/year.
+    - Leadership: Jegatheeshwar (CEO & Founder), Sam Prathik (Co-Founder & COO).
+    - Mission: Providing top-tier tech solutions at budget-friendly prices.
+    
+    Response Guidelines:
+    - Use Markdown for formatting (bolding, lists, code blocks).
+    - If asked for code, provide clean, modern examples with explanations.
+    - Always maintain a helpful, "can-do" attitude.
+    - For project inquiries, subtly suggest contacting via WhatsApp (+91 95145 18197) or the contact form.`;
+
+  const ZOS_BRAIN = {
+    // Fallback logic in case API fails
+    processFallback(input) {
+      const q = input.toLowerCase().trim();
+      if (q.includes('price')) return "Our premium plans start at just **₹2,499/year**. We focus on high-quality, budget-friendly solutions.";
+      if (q.includes('contact')) return "You can reach our experts at **+91 95145 18197** via WhatsApp!";
+      return "I'm currently operating in a simplified mode, but I'm here to help! How can I assist you with your tech needs?";
+    }
+  };
+
+  const zosChatMessages = document.getElementById('zos-chat-messages');
+  const zosUserInput = document.getElementById('zos-user-input');
+
+  const addZosMessage = (text, sender) => {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `zos-message ${sender}`;
+    
+    if (sender === 'bot') {
+      // Use marked to parse markdown for bot responses
+      msgDiv.innerHTML = marked.parse(text);
+      // Apply syntax highlighting to any code blocks
+      msgDiv.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block);
+      });
+    } else {
+      msgDiv.innerHTML = `<p>${text}</p>`;
+    }
+    
+    zosChatMessages.appendChild(msgDiv);
+    zosChatMessages.scrollTop = zosChatMessages.scrollHeight;
+  };
+
+  const showTypingIndicator = () => {
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'zos-typing';
+    typingDiv.id = 'zos-typing-indicator';
+    typingDiv.innerHTML = '<span></span><span></span><span></span>';
+    zosChatMessages.appendChild(typingDiv);
+    zosChatMessages.scrollTop = zosChatMessages.scrollHeight;
+    return typingDiv;
+  };
+
+  const handleZosSend = async () => {
+    const text = zosUserInput.value.trim();
+    if (!text) return;
+
+    addZosMessage(text, 'user');
+    zosUserInput.value = '';
+
+    const indicator = showTypingIndicator();
+
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": window.location.href,
+          "X-Title": "Zero & One Tech Solutions"
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-3.5-turbo",
+          messages: [
+            { role: "system", content: ZOS_SYSTEM_PROMPT },
+            { role: "user", content: text }
+          ]
+        })
+      });
+
+      const data = await response.json();
+      if (indicator) indicator.remove();
+
+      if (data.choices && data.choices[0]) {
+        addZosMessage(data.choices[0].message.content, 'bot');
+      } else {
+        throw new Error("Invalid API response");
+      }
+    } catch (error) {
+      console.error("ZOS AI Error:", error);
+      if (indicator) indicator.remove();
+      addZosMessage(ZOS_BRAIN.processFallback(text), 'bot');
+    }
+  };
+
+  const zosFloatingIcon = document.getElementById('zos-floating-icon');
+  const zosChatWindow = document.getElementById('zos-chat-window');
+  const zosCloseBtn = document.getElementById('zos-close-btn');
+  const zosSendBtn = document.getElementById('zos-send-btn');
+
+  if (zosFloatingIcon) {
+    zosFloatingIcon.addEventListener('click', () => {
+      zosChatWindow.classList.add('active');
+    });
+  }
+
+  if (zosCloseBtn) {
+    zosCloseBtn.addEventListener('click', () => {
+      zosChatWindow.classList.remove('active');
+    });
+  }
+
+  if (zosSendBtn) {
+    zosSendBtn.addEventListener('click', handleZosSend);
+  }
+
+  if (zosUserInput) {
+    zosUserInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleZosSend();
+    });
+  }
+
+  // --- PRELOADER REMOVAL ---
+  window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+      setTimeout(() => {
+        preloader.classList.add('loaded');
+        document.body.classList.remove('preloader-active');
+      }, 1500); // Small delay to show the animation
+    }
+  });
+
   // --- MAP INTERACTION LOGIC ---
   const mapCard = document.getElementById('interactive-map-card');
   const mapOverlay = document.getElementById('map-overlay');
